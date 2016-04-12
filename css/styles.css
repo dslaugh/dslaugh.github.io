@@ -22,3 +22,7 @@ html, body {
     border: 1px solid #333;
     vertical-align: top;
 }
+.add-rating-title {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+}
