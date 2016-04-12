@@ -10,3 +10,13 @@ html, body {
     margin: 0;
     text-align: center;
 }
+.ratings-table {
+    border: 1px solid #333;
+    display: inline-block;
+}
+.box {
+    padding: 10px;
+    display: inline-block;
+    border: 1px solid #333;
+    vertical-align: top;
+}
