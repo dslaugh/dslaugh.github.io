@@ -69,6 +69,10 @@ var Controller = {
         };
 
         Model.addRating(rating);
+        View.cartNumber.value = '';
+        View.ratings.forEach((rating) => {
+            rating.checked = false;
+        });
     },
     resetRatings: () => {
         Model.resetRatings();

@@ -123,6 +123,10 @@
 	        };
 
 	        Model.addRating(rating);
+	        View.cartNumber.value = '';
+	        View.ratings.forEach(function (rating) {
+	            rating.checked = false;
+	        });
 	    },
 	    resetRatings: function resetRatings() {
 	        Model.resetRatings();
