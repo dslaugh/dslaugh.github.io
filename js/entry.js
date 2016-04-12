@@ -46,7 +46,7 @@ var View = {
     },
     bindUIEvents: () => {
         View.addRatingBtn.addEventListener('click', Controller.addRating);
-        View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
+        // View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
     }
 };
 
