@@ -17,6 +17,11 @@ var Model = {
         Model._writeToLocalStorage();
         Model.events.emit('rating_added', Model.cart_ratings);
     },
+    resetRatings: () => {
+        Model.cart_ratings = [];
+        Model._writeToLocalStorage();
+        Model.events.emit('ratings_reset', Model.cart_ratings);
+    },
     _writeToLocalStorage: () => {
         LocStore.set('cart_ratings', Model.cart_ratings);
     }
@@ -25,6 +30,7 @@ var Model = {
 var View = {
     addRatingBtn: document.querySelector('#AddRatingBtn'),
     cartNumber: document.querySelector('#CartNumber'),
+    resetRatingsBtn: document.querySelector('#ResetRatings'),
     ratings: Array.prototype.slice.call(document.querySelectorAll('input[name=rating]')),
     ratingsList: document.querySelector('#TopCarts tbody'),
     renderRatings: (ratings) => {
@@ -40,6 +46,7 @@ var View = {
     },
     bindUIEvents: () => {
         View.addRatingBtn.addEventListener('click', Controller.addRating);
+        View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
     }
 };
 
@@ -47,6 +54,7 @@ var Controller = {
     initialize: () => {
         Model.events.on('ratings_loaded', View.renderRatings);
         Model.events.on('rating_added', View.renderRatings);
+        Model.events.on('ratings_reset', View.renderRatings);
         Model.loadRatings();
         View.bindUIEvents();
     },
@@ -61,9 +69,9 @@ var Controller = {
         };
 
         Model.addRating(rating);
-
-        console.log(View.cartNumber.value, score[0].value);
-
+    },
+    resetRatings: () => {
+        Model.resetRatings();
     }
 };
 

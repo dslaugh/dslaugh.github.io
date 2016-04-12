@@ -46,11 +46,11 @@
 
 	'use strict';
 
-	var _CustomEvents = __webpack_require__(2);
+	var _CustomEvents = __webpack_require__(1);
 
 	var _CustomEvents2 = _interopRequireDefault(_CustomEvents);
 
-	var _LocStore = __webpack_require__(3);
+	var _LocStore = __webpack_require__(2);
 
 	var _LocStore2 = _interopRequireDefault(_LocStore);
 
@@ -71,6 +71,11 @@
 	        Model._writeToLocalStorage();
 	        Model.events.emit('rating_added', Model.cart_ratings);
 	    },
+	    resetRatings: function resetRatings() {
+	        Model.cart_ratings = [];
+	        Model._writeToLocalStorage();
+	        Model.events.emit('ratings_reset', Model.cart_ratings);
+	    },
 	    _writeToLocalStorage: function _writeToLocalStorage() {
 	        _LocStore2.default.set('cart_ratings', Model.cart_ratings);
 	    }
@@ -79,6 +84,7 @@
 	var View = {
 	    addRatingBtn: document.querySelector('#AddRatingBtn'),
 	    cartNumber: document.querySelector('#CartNumber'),
+	    resetRatingsBtn: document.querySelector('#ResetRatings'),
 	    ratings: Array.prototype.slice.call(document.querySelectorAll('input[name=rating]')),
 	    ratingsList: document.querySelector('#TopCarts tbody'),
 	    renderRatings: function renderRatings(ratings) {
@@ -94,6 +100,7 @@
 	    },
 	    bindUIEvents: function bindUIEvents() {
 	        View.addRatingBtn.addEventListener('click', Controller.addRating);
+	        View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
 	    }
 	};
 
@@ -101,6 +108,7 @@
 	    initialize: function initialize() {
 	        Model.events.on('ratings_loaded', View.renderRatings);
 	        Model.events.on('rating_added', View.renderRatings);
+	        Model.events.on('ratings_reset', View.renderRatings);
 	        Model.loadRatings();
 	        View.bindUIEvents();
 	    },
@@ -115,16 +123,16 @@
 	        };
 
 	        Model.addRating(rating);
-
-	        console.log(View.cartNumber.value, score[0].value);
+	    },
+	    resetRatings: function resetRatings() {
+	        Model.resetRatings();
 	    }
 	};
 
 	Controller.initialize();
 
 /***/ },
-/* 1 */,
-/* 2 */
+/* 1 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -155,7 +163,7 @@
 	exports.default = CustomEvents;
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports) {
 
 	"use strict";
