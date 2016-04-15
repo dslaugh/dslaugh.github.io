@@ -13,7 +13,7 @@ html, body {
     padding: 20px 0;
 }
 .main-container {
-    width: 600px;
+    width: 500px;
     margin: 0 auto;
 }
 .ratings-table {
@@ -21,6 +21,7 @@ html, body {
     display: inline-block;
     font-size: 30px;
     border-collapse: collapse;
+    margin-right: 40px;
 }
 .ratings-table th,
 .ratings-table td {
