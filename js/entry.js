@@ -41,7 +41,7 @@ var View = {
         });
 // console.log(sortedRatings);
         View.ratingsList.innerHTML = sortedRatings.reduce((prevVal, currVal) => {
-            return prevVal + '<tr><td>Cart #: ' + currVal.number + '</td><td>rating: ' + currVal.score + '</td></tr>';
+            return prevVal + '<tr><td>' + currVal.number + '</td><td>' + currVal.score + '</td></tr>';
         }, '');
     },
     bindUIEvents: () => {
