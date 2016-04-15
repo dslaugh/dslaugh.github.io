@@ -13,8 +13,7 @@ html, body {
     padding: 20px 0;
 }
 .main-container {
-    width: 500px;
-    margin: 0 auto;
+    padding: 20px;
 }
 .ratings-table {
     border: 1px solid #333;
