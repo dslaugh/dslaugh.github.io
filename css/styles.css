@@ -12,6 +12,10 @@ html, body {
     text-align: center;
     padding: 20px 0;
 }
+.main-container {
+    width: 600px;
+    margin: 0 auto;
+}
 .ratings-table {
     border: 1px solid #333;
     display: inline-block;

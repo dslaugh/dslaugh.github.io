@@ -10,11 +10,11 @@
             <h1>Welcome to the World of Tomorrow!</h1>
             <!-- <button id="ResetRatings">Reset</button> -->
         </header>
-        <div style="text-align: center;">
+        <div class="main-container">
             <table id="TopCarts" class="ratings-table">
                 <thead>
                     <tr>
-                        <th>Cart Number</th>
+                        <th>Cart</th>
                         <th>Rating</th>
                     </tr>
                 </thead>
@@ -27,26 +27,24 @@
                 <input type="text" id="CartNumber" size="4" class="cart-number-input" />
                 <label for="CartNumber">Cart Number</label>
                 <div>
-                    <div>
-                        <label for="Rating1">1</label>
-                        <input type="radio" name="rating" id="Rating1" value="1" />
-                    </div>
-                    <div>
-                        <label for="Rating2">2</label>
-                        <input type="radio" name="rating" id="Rating2" value="2" />
-                    </div>
-                    <div>
-                        <label for="Rating3">3</label>
-                        <input type="radio" name="rating" id="Rating3" value="3" />
-                    </div>
-                    <div>
-                        <label for="Rating4">4</label>
-                        <input type="radio" name="rating" id="Rating4" value="4" />
-                    </div>
-                    <div>
-                        <label for="Rating5">5</label>
-                        <input type="radio" name="rating" id="Rating5" value="5" />
-                    </div>
+                    <label for="Rating5">5</label>
+                    <input type="radio" name="rating" id="Rating5" value="5" />
+                </div>
+                <div>
+                    <label for="Rating4">4</label>
+                    <input type="radio" name="rating" id="Rating4" value="4" />
+                </div>
+                <div>
+                    <label for="Rating3">3</label>
+                    <input type="radio" name="rating" id="Rating3" value="3" />
+                </div>
+                <div>
+                    <label for="Rating2">2</label>
+                    <input type="radio" name="rating" id="Rating2" value="2" />
+                </div>
+                <div>
+                    <label for="Rating1">1</label>
+                    <input type="radio" name="rating" id="Rating1" value="1" />
                 </div>
                 <button type="button" id="AddRatingBtn">Add</button>
             </div>
