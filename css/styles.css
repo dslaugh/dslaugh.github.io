@@ -10,6 +10,7 @@ html, body {
 .main-header h1 {
     margin: 0;
     text-align: center;
+    padding: 20px 0;
 }
 .ratings-table {
     border: 1px solid #333;

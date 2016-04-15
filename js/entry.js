@@ -2,9 +2,6 @@
 import CustomEvents from './CustomEvents';
 import LocStore from './LocStore';
 
-
-
-
 var Model = {
     events: CustomEvents(),
     cart_ratings: [],
@@ -39,7 +36,7 @@ var View = {
             b.score = parseInt(b.score, 10);
             return b.score - a.score;
         });
-// console.log(sortedRatings);
+
         View.ratingsList.innerHTML = sortedRatings.reduce((prevVal, currVal) => {
             return prevVal + '<tr><td>' + currVal.number + '</td><td>' + currVal.score + '</td></tr>';
         }, '');
