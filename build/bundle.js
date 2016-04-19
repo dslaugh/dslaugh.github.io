@@ -93,7 +93,7 @@
 	            b.score = parseInt(b.score, 10);
 	            return b.score - a.score;
 	        });
-	        // console.log(sortedRatings);
+
 	        View.ratingsList.innerHTML = sortedRatings.reduce(function (prevVal, currVal) {
 	            return prevVal + '<tr><td>' + currVal.number + '</td><td>' + currVal.score + '</td></tr>';
 	        }, '');
