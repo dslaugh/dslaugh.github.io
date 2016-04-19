@@ -46,6 +46,11 @@ html, body {
 .cart-number-input {
     font-size: 30px;
 }
+.big-btn {
+    width: 100%;
+    font-size: 30px;
+    margin: 20px 0 0 0;
+}
 svg {
     position: relative;
     top: 5px;
