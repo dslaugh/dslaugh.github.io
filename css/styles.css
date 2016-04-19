@@ -13,16 +13,17 @@ html, body {
     padding: 20px 0;
 }
 .main-container {
+    display: flex;
     padding: 20px;
     width: 1440px;
     margin: 0 auto;
+    justify-content: space-between;
 }
 .ratings-table {
     border: 1px solid #333;
-    display: inline-block;
     font-size: 30px;
     border-collapse: collapse;
-    margin-right: 40px;
+    width: 700px;
 }
 .ratings-table th,
 .ratings-table td {
@@ -30,9 +31,9 @@ html, body {
     padding: 3px 5px;
 }
 .box {
+    width: 700px;
     font-size: 30px;
     padding: 10px;
-    display: inline-block;
     border: 1px solid #333;
     vertical-align: top;
 }
