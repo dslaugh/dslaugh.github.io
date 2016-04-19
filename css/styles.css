@@ -36,6 +36,7 @@ html, body {
     padding: 10px;
     border: 1px solid #333;
     vertical-align: top;
+    margin: 0 0 10px 0;
 }
 .add-rating-title {
     background-color: rgba(0, 0, 0, 0.5);
