@@ -13,12 +13,10 @@ html, body {
     padding: 20px 0;
 }
 .main-container {
-    display: flex;
     padding: 20px;
-    margin: 0 auto;
-    justify-content: space-between;
 }
 .ratings-table {
+    width: 100%;
     border: 1px solid #333;
     font-size: 30px;
     border-collapse: collapse;
@@ -33,6 +31,7 @@ html, body {
     padding: 3px 5px;
 }
 .box {
+    display: none;
     font-size: 30px;
     padding: 10px;
     border: 1px solid #333;
@@ -46,4 +45,12 @@ html, body {
 }
 .cart-number-input {
     font-size: 30px;
+}
+svg {
+    position: relative;
+    top: 5px;
+}
+input[type=radio] {
+    position: relative;
+    top: -10px;
 }

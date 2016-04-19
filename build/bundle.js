@@ -56,9 +56,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// import {compose, curry, extend} from './Utils';
-
-
 	var Model = {
 	    events: (0, _CustomEvents2.default)(),
 	    cart_ratings: [],
@@ -83,6 +80,8 @@
 
 	var View = {
 	    addRatingBtn: document.querySelector('#AddRatingBtn'),
+	    addRatingContainer: document.querySelector('#AddRatingContainer'),
+	    saveRatingBtn: document.querySelector('#SaveRatingBtn'),
 	    cartNumber: document.querySelector('#CartNumber'),
 	    resetRatingsBtn: document.querySelector('#ResetRatings'),
 	    ratings: Array.prototype.slice.call(document.querySelectorAll('input[name=rating]')),
@@ -95,11 +94,26 @@
 	        });
 
 	        View.ratingsList.innerHTML = sortedRatings.reduce(function (prevVal, currVal) {
-	            return prevVal + '<tr><td>' + currVal.number + '</td><td>' + currVal.score + '</td></tr>';
+	            return prevVal + '<tr><td>' + currVal.number + '</td><td>' + View.renderStars(currVal.score) + '</td></tr>';
 	        }, '');
 	    },
+	    showAddRating: function showAddRating() {
+	        View.addRatingContainer.style.display = 'block';
+	    },
+	    hideAddRating: function hideAddRating() {
+	        View.addRatingContainer.style.display = 'none';
+	    },
+	    renderStars: function renderStars(numStars) {
+	        var i = 0;
+	        var stars = '';
+	        for (; i < numStars; i++) {
+	            stars += '<svg width="40" height="40">\n                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue"; stroke-width:1; stroke:white; stroke:white;" />\n            </svg>';
+	        }
+	        return stars;
+	    },
 	    bindUIEvents: function bindUIEvents() {
-	        View.addRatingBtn.addEventListener('click', Controller.addRating);
+	        View.saveRatingBtn.addEventListener('click', Controller.saveRating);
+	        View.addRatingBtn.addEventListener('click', Controller.showHideAddRating);
 	        // View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
 	    }
 	};
@@ -112,11 +126,22 @@
 	        Model.loadRatings();
 	        View.bindUIEvents();
 	    },
-	    addRating: function addRating() {
+	    showHideAddRating: function showHideAddRating() {
+	        if (View.addRatingContainer.style.display === 'block') {
+	            View.hideAddRating();
+	        } else {
+	            View.showAddRating();
+	        }
+	    },
+	    saveRating: function saveRating() {
 	        var score = View.ratings.filter(function (rating) {
 	            return rating.checked === true;
 	        });
 
+	        if (score.length < 1 || View.cartNumber.value == '') {
+	            alert('Please fill out form');
+	            return false;
+	        }
 	        var rating = {
 	            number: View.cartNumber.value,
 	            score: score[0].value
