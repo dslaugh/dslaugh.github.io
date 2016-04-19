@@ -4,7 +4,8 @@ html, body {
 }
 .main-header {
     height: 100px;
-    background-color: #0088FF;
+    background-color: #0000FF;
+    color: #fff;
     margin-bottom: 10px;
 }
 .main-header h1 {

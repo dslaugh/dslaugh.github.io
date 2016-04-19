@@ -107,7 +107,7 @@
 	        var i = 0;
 	        var stars = '';
 	        for (; i < numStars; i++) {
-	            stars += '<svg width="40" height="40">\n                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue"; stroke-width:1; stroke:white; stroke:white;" />\n            </svg>';
+	            stars += '<svg width="40" height="40">\n                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:#0088FF"; stroke-width:1; stroke:white; stroke:white;" />\n            </svg>';
 	        }
 	        return stars;
 	    },
