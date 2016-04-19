@@ -54,10 +54,16 @@ var View = {
         for(; i<numStars; i++) {
             stars +=
             `<svg width="40" height="40">
-                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:#0088FF"; stroke-width:1; stroke:white; stroke:white;" />
+                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue"; stroke-width:1; stroke:white; stroke:white;" />
             </svg>`;
         }
         return stars;
+    },
+    resetRatingForm: () => {
+        View.cartNumber.value = '';
+        View.ratings.forEach((rating) => {
+            rating.checked = false;
+        });
     },
     bindUIEvents: () => {
         View.saveRatingBtn.addEventListener('click', Controller.saveRating);
@@ -90,16 +96,14 @@ var Controller = {
             alert('Please fill out form');
             return false;
         }
+
         let rating = {
             number: View.cartNumber.value,
             score: score[0].value,
         };
-
         Model.addRating(rating);
-        View.cartNumber.value = '';
-        View.ratings.forEach((rating) => {
-            rating.checked = false;
-        });
+
+        View.resetRatingForm();
     },
     resetRatings: () => {
         Model.resetRatings();
