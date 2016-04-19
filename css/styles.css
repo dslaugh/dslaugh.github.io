@@ -15,7 +15,6 @@ html, body {
 .main-container {
     display: flex;
     padding: 20px;
-    width: 1440px;
     margin: 0 auto;
     justify-content: space-between;
 }
@@ -25,13 +24,16 @@ html, body {
     border-collapse: collapse;
     width: 700px;
 }
+.ratings-table th {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 1);
+}
 .ratings-table th,
 .ratings-table td {
     border: 1px solid #333;
     padding: 3px 5px;
 }
 .box {
-    width: 700px;
     font-size: 30px;
     padding: 10px;
     border: 1px solid #333;
