@@ -2,6 +2,11 @@ html, body {
     padding: 0;
     margin: 0;
 }
+.main-container {
+    padding: 20px;
+    width: 700px;
+    margin: 0 auto;
+}
 .main-header {
     height: 100px;
     background-color: #0088FF;
@@ -11,9 +16,6 @@ html, body {
     margin: 0;
     text-align: center;
     padding: 20px 0;
-}
-.main-container {
-    padding: 20px;
 }
 .ratings-table {
     border: 1px solid #333;
