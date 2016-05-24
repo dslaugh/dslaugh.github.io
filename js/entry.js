@@ -104,6 +104,7 @@ var Controller = {
         Model.addRating(rating);
 
         View.resetRatingForm();
+        View.hideAddRating();
     },
     resetRatings: () => {
         Model.resetRatings();

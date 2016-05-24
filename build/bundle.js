@@ -156,6 +156,7 @@
 	        Model.addRating(rating);
 
 	        View.resetRatingForm();
+	        View.hideAddRating();
 	    },
 	    resetRatings: function resetRatings() {
 	        Model.resetRatings();
@@ -186,9 +187,11 @@
 	            subscribers[topic].splice(subscribers[topic].indexOf(fn), 1);
 	        },
 	        emit: function emit(topic, data) {
-	            subscribers[topic].forEach(function (fn) {
-	                fn(data);
-	            });
+	            if (subscribers[topic]) {
+	                subscribers[topic].forEach(function (fn) {
+	                    fn(data);
+	                });
+	            }
 	        }
 	    };
 	};
