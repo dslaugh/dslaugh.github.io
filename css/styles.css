@@ -38,6 +38,12 @@ html, body {
     vertical-align: top;
     margin: 0 0 10px 0;
 }
+.filter-box-row {
+    margin-bottom: 10px;
+}
+.filter-header {
+    border-bottom: 1px solid #333;
+}
 .hidden {
     display: none;
 }
@@ -54,6 +60,13 @@ html, body {
     width: 100%;
     font-size: 30px;
     margin: 20px 0 0 0;
+}
+.filter-btn {
+    padding: 10px;
+}
+.cart-filter-btn {
+    position: relative;
+    top: -5px;
 }
 svg {
     position: relative;

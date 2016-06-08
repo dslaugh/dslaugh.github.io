@@ -31,6 +31,13 @@ var View = {
     resetRatingsBtn: document.querySelector('#ResetRatings'),
     ratings: Array.prototype.slice.call(document.querySelectorAll('input[name=rating]')),
     ratingsList: document.querySelector('#TopCarts tbody'),
+    fiveStarFilterBtn: document.querySelector('#FiveStarFilterBtn'),
+    fourStarFilterBtn: document.querySelector('#FourStarFilterBtn'),
+    threeStarFilterBtn: document.querySelector('#ThreeStarFilterBtn'),
+    twoStarFilterBtn: document.querySelector('#TwoStarFilterBtn'),
+    oneStarFilterBtn: document.querySelector('#OneStarFilterBtn'),
+    cartNumberFilterInput: document.querySelector('#CartNumberFilterInput'),
+    cartNumberFilterBtn: document.querySelector('#CartNumberFilterBtn'),
     renderRatings: (ratings) => {
         let sortedRatings = ratings.sort((a, b) => {
             a.score = parseInt(a.score, 10);
@@ -39,7 +46,7 @@ var View = {
         });
 
         View.ratingsList.innerHTML = sortedRatings.reduce((prevVal, currVal) => {
-            return prevVal + '<tr><td>' + currVal.number + '</td><td>' + View.renderStars(currVal.score) + '</td></tr>';
+            return prevVal + '<tr><td>' + currVal.number + '</td><td class="stars">' + View.renderStars(currVal.score) + '</td></tr>';
         }, '');
     },
     showAddRating: () => {
@@ -65,9 +72,51 @@ var View = {
             rating.checked = false;
         });
     },
+    filterFiveStars: () => {
+        View._filterByStars(5);
+    },
+    filterFourStars: () => {
+        View._filterByStars(4);
+    },
+    filterThreeStars: () => {
+        View._filterByStars(3);
+    },
+    filterTwoStars: () => {
+        View._filterByStars(2);
+    },
+    filterOneStar: () => {
+        View._filterByStars(1);
+    },
+    _filterByStars: (numStars) => {
+        View._resetFilters();
+
+        let rows = View.ratingsList.querySelectorAll('tr');
+        let i = 0;
+        let len = rows.length;
+        for (; i<len; i++) {
+            let svgs = rows[i].querySelectorAll('.stars > svg');
+            let stars = svgs.length;
+            if (stars !== numStars) {
+                rows[i].style.display = 'none';
+            }
+        }
+    },
+    _resetFilters: () => {
+        let rows = View.ratingsList.querySelectorAll('tr');
+        let i = 0;
+        let len = rows.length;
+        for (; i<len; i++) {
+            rows[i].style.display = 'table-row';
+        }
+    },
     bindUIEvents: () => {
         View.saveRatingBtn.addEventListener('click', Controller.saveRating);
         View.addRatingBtn.addEventListener('click', Controller.showHideAddRating);
+        View.fiveStarFilterBtn.addEventListener('click', View.filterFiveStars);
+        View.fourStarFilterBtn.addEventListener('click', View.filterFourStars);
+        View.threeStarFilterBtn.addEventListener('click', View.filterThreeStars);
+        View.twoStarFilterBtn.addEventListener('click', View.filterTwoStars);
+        View.oneStarFilterBtn.addEventListener('click', View.filterOneStar);
         // View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
     }
 };
