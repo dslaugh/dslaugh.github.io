@@ -25,7 +25,7 @@ var Model = {
 
 var View = {
     addRatingBtn: document.querySelector('#AddRatingBtn'),
-    addRatingContainer: document.querySelector('#AddRatingContainer'),
+    addRatingItems: document.querySelector('#AddRatingItems'),
     saveRatingBtn: document.querySelector('#SaveRatingBtn'),
     cartNumber: document.querySelector('#CartNumber'),
     resetRatingsBtn: document.querySelector('#ResetRatings'),
@@ -38,6 +38,9 @@ var View = {
     oneStarFilterBtn: document.querySelector('#OneStarFilterBtn'),
     cartNumberFilterInput: document.querySelector('#CartNumberFilterInput'),
     cartNumberFilterBtn: document.querySelector('#CartNumberFilterBtn'),
+    resetFilterBtn: document.querySelector('#ResetFilterBtn'),
+    filterItems: document.querySelector('#FilterItems'),
+    showHideFiltersBtn: document.querySelector('#ShowHideFiltersBtn'),
     renderRatings: (ratings) => {
         let sortedRatings = ratings.sort((a, b) => {
             a.score = parseInt(a.score, 10);
@@ -46,14 +49,14 @@ var View = {
         });
 
         View.ratingsList.innerHTML = sortedRatings.reduce((prevVal, currVal) => {
-            return prevVal + '<tr><td>' + currVal.number + '</td><td class="stars">' + View.renderStars(currVal.score) + '</td></tr>';
+            return prevVal + '<tr><td class="cart-number">' + currVal.number + '</td><td class="stars">' + View.renderStars(currVal.score) + '</td></tr>';
         }, '');
     },
     showAddRating: () => {
-        View.addRatingContainer.style.display = 'block';
+        View.addRatingItems.style.display = 'block';
     },
     hideAddRating: () => {
-        View.addRatingContainer.style.display = 'none';
+        View.addRatingItems.style.display = 'none';
     },
     renderStars: (numStars) => {
         let i = 0;
@@ -101,6 +104,27 @@ var View = {
             }
         }
     },
+    filterByCart: () => {
+        let cartNumber = parseInt(View.cartNumberFilterInput.value, 10);
+        if (isNaN(cartNumber)) {
+            alert('Cart number must be a number');
+            return false;
+        }
+        View._filterByCartNumber(cartNumber);
+    },
+    _filterByCartNumber: (cartNumber) => {
+        View._resetFilters();
+
+        let rows = View.ratingsList.querySelectorAll('tr');
+        let i = 0;
+        let len = rows.length;
+        for (; i<len; i++) {
+            let elemCartNumber = parseInt(rows[i].querySelector('.cart-number').innerText, 10);
+            if (elemCartNumber !== cartNumber) {
+                rows[i].style.display = 'none';
+            }
+        }
+    },
     _resetFilters: () => {
         let rows = View.ratingsList.querySelectorAll('tr');
         let i = 0;
@@ -108,6 +132,12 @@ var View = {
         for (; i<len; i++) {
             rows[i].style.display = 'table-row';
         }
+    },
+    showFilterItems: () => {
+        View.filterItems.display = 'block';
+    },
+    hideFilterItems: () => {
+        View.filterItems.display = 'none';
     },
     bindUIEvents: () => {
         View.saveRatingBtn.addEventListener('click', Controller.saveRating);
@@ -117,6 +147,9 @@ var View = {
         View.threeStarFilterBtn.addEventListener('click', View.filterThreeStars);
         View.twoStarFilterBtn.addEventListener('click', View.filterTwoStars);
         View.oneStarFilterBtn.addEventListener('click', View.filterOneStar);
+        View.cartNumberFilterBtn.addEventListener('click', View.filterByCart);
+        View.resetFilterBtn.addEventListener('click', View._resetFilters);
+        View.showHideFiltersBtn.addEventListener('click', Controller.showHideFilters);
         // View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
     }
 };
@@ -130,10 +163,18 @@ var Controller = {
         View.bindUIEvents();
     },
     showHideAddRating: () => {
-        if (View.addRatingContainer.style.display === 'block') {
+        if (View.addRatingItems.style.display === 'block') {
             View.hideAddRating();
         } else {
             View.showAddRating();
+        }
+    },
+    showHideFilters: () => {
+        console.log(View.filterItems.style.display);
+        if (View.filterItems.style.display === 'block') {
+            View.filterItems.style.display = 'none';
+        } else {
+            View.filterItems.style.display = 'block';
         }
     },
     saveRating: () => {

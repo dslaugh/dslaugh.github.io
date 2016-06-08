@@ -8,98 +8,105 @@
     </head>
     <body>
         <header class="main-header">
-            <h1 id="AddRatingBtn">Cart Ratings</h1>
+            <h1>Cart Ratings</h1>
             <!-- <button id="ResetRatings">Reset</button> -->
         </header>
         <div class="main-container">
-            <div class="box hidden" id="AddRatingContainer">
-                <div class="add-rating-title">Add New Rating</div>
-                <input type="text" id="CartNumber" size="3" class="cart-number-input" />
-                <label for="CartNumber">Cart Number</label>
-                <div>
-                    <input type="radio" name="rating" id="Rating5" value="5" />
-                    <label for="Rating5">
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                    </label>
+            <div class="box" id="AddRatingContainer">
+                <div class="box-title" id="AddRatingBtn">Add New Rating</div>
+                <div id="AddRatingItems" class="hidden">
+                    <input type="text" id="CartNumber" size="3" class="cart-number-input" />
+                    <label for="CartNumber">Cart Number</label>
+                    <div>
+                        <input type="radio" name="rating" id="Rating5" value="5" />
+                        <label for="Rating5">
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="rating" id="Rating4" value="4" />
+                        <label for="Rating4">
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="rating" id="Rating3" value="3" />
+                        <label for="Rating3">
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="rating" id="Rating2" value="2" />
+                        <label for="Rating2">
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="rating" id="Rating1" value="1" />
+                        <label for="Rating1">
+                            <svg width="40" height="40">
+                                <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
+                            </svg>
+                        </label>
+                    </div>
+                    <button type="button" class="big-btn" id="SaveRatingBtn">Save</button>
                 </div>
-                <div>
-                    <input type="radio" name="rating" id="Rating4" value="4" />
-                    <label for="Rating4">
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                    </label>
-                </div>
-                <div>
-                    <input type="radio" name="rating" id="Rating3" value="3" />
-                    <label for="Rating3">
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                    </label>
-                </div>
-                <div>
-                    <input type="radio" name="rating" id="Rating2" value="2" />
-                    <label for="Rating2">
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                    </label>
-                </div>
-                <div>
-                    <input type="radio" name="rating" id="Rating1" value="1" />
-                    <label for="Rating1">
-                        <svg width="40" height="40">
-                            <polygon id="star" points="20,5 25,14 35,15 28,23 30,32 20,27 10,32 12,23 6,15 15,14" style="fill:blue;" />
-                        </svg>
-                    </label>
-                </div>
-                <button type="button" class="big-btn" id="SaveRatingBtn">Save</button>
             </div>
             <div class="box">
-                <div class="filter-box-row filter-header">Filters:</div>
-                <div class="filter-box-row">
-                    <button type="button" class="filter-btn" id="FiveStarFilterBtn">5 Stars</button>
-                    <button type="button" class="filter-btn" id="FourStarFilterBtn">4 Stars</button>
-                    <button type="button" class="filter-btn" id="ThreeStarFilterBtn">3 Stars</button>
-                    <button type="button" class="filter-btn" id="TwoStarFilterBtn">2 Stars</button>
-                    <button type="button" class="filter-btn" id="OneStarFilterBtn">1 Star</button>
-                </div>
-                <div class="filter-box-row">
-                    Cart # <input type="text" class="cart-number-input" size="3" id="CartNumberFilterInput" />
-                    <button type="button" class="filter-btn cart-filter-btn" id="CartNumberFilterBtn">Find</button>
+                <div class="filter-box-row box-title" id="ShowHideFiltersBtn">Filters</div>
+                <div id="FilterItems" class="hidden">
+                    <div class="filter-box-row">
+                        <button type="button" class="filter-btn" id="FiveStarFilterBtn">5 Stars</button>
+                        <button type="button" class="filter-btn" id="FourStarFilterBtn">4 Stars</button>
+                        <button type="button" class="filter-btn" id="ThreeStarFilterBtn">3 Stars</button>
+                        <button type="button" class="filter-btn" id="TwoStarFilterBtn">2 Stars</button>
+                        <button type="button" class="filter-btn" id="OneStarFilterBtn">1 Star</button>
+                    </div>
+                    <div class="filter-box-row">
+                        Cart # <input type="text" class="cart-number-input" size="3" id="CartNumberFilterInput" />
+                        <button type="button" class="filter-btn cart-filter-btn" id="CartNumberFilterBtn">Find</button>
+                    </div>
+                    <div class="filter-box-row">
+                        <button type="button" class="filter-btn cart-filter-btn" id="ResetFilterBtn">Reset</button>
+                    </div>
                 </div>
             </div>
             <table id="TopCarts" class="ratings-table">

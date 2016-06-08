@@ -80,7 +80,7 @@
 
 	var View = {
 	    addRatingBtn: document.querySelector('#AddRatingBtn'),
-	    addRatingContainer: document.querySelector('#AddRatingContainer'),
+	    addRatingItems: document.querySelector('#AddRatingItems'),
 	    saveRatingBtn: document.querySelector('#SaveRatingBtn'),
 	    cartNumber: document.querySelector('#CartNumber'),
 	    resetRatingsBtn: document.querySelector('#ResetRatings'),
@@ -93,6 +93,9 @@
 	    oneStarFilterBtn: document.querySelector('#OneStarFilterBtn'),
 	    cartNumberFilterInput: document.querySelector('#CartNumberFilterInput'),
 	    cartNumberFilterBtn: document.querySelector('#CartNumberFilterBtn'),
+	    resetFilterBtn: document.querySelector('#ResetFilterBtn'),
+	    filterItems: document.querySelector('#FilterItems'),
+	    showHideFiltersBtn: document.querySelector('#ShowHideFiltersBtn'),
 	    renderRatings: function renderRatings(ratings) {
 	        var sortedRatings = ratings.sort(function (a, b) {
 	            a.score = parseInt(a.score, 10);
@@ -101,14 +104,14 @@
 	        });
 
 	        View.ratingsList.innerHTML = sortedRatings.reduce(function (prevVal, currVal) {
-	            return prevVal + '<tr><td>' + currVal.number + '</td><td class="stars">' + View.renderStars(currVal.score) + '</td></tr>';
+	            return prevVal + '<tr><td class="cart-number">' + currVal.number + '</td><td class="stars">' + View.renderStars(currVal.score) + '</td></tr>';
 	        }, '');
 	    },
 	    showAddRating: function showAddRating() {
-	        View.addRatingContainer.style.display = 'block';
+	        View.addRatingItems.style.display = 'block';
 	    },
 	    hideAddRating: function hideAddRating() {
-	        View.addRatingContainer.style.display = 'none';
+	        View.addRatingItems.style.display = 'none';
 	    },
 	    renderStars: function renderStars(numStars) {
 	        var i = 0;
@@ -153,6 +156,27 @@
 	            }
 	        }
 	    },
+	    filterByCart: function filterByCart() {
+	        var cartNumber = parseInt(View.cartNumberFilterInput.value, 10);
+	        if (isNaN(cartNumber)) {
+	            alert('Cart number must be a number');
+	            return false;
+	        }
+	        View._filterByCartNumber(cartNumber);
+	    },
+	    _filterByCartNumber: function _filterByCartNumber(cartNumber) {
+	        View._resetFilters();
+
+	        var rows = View.ratingsList.querySelectorAll('tr');
+	        var i = 0;
+	        var len = rows.length;
+	        for (; i < len; i++) {
+	            var elemCartNumber = parseInt(rows[i].querySelector('.cart-number').innerText, 10);
+	            if (elemCartNumber !== cartNumber) {
+	                rows[i].style.display = 'none';
+	            }
+	        }
+	    },
 	    _resetFilters: function _resetFilters() {
 	        var rows = View.ratingsList.querySelectorAll('tr');
 	        var i = 0;
@@ -160,6 +184,12 @@
 	        for (; i < len; i++) {
 	            rows[i].style.display = 'table-row';
 	        }
+	    },
+	    showFilterItems: function showFilterItems() {
+	        View.filterItems.display = 'block';
+	    },
+	    hideFilterItems: function hideFilterItems() {
+	        View.filterItems.display = 'none';
 	    },
 	    bindUIEvents: function bindUIEvents() {
 	        View.saveRatingBtn.addEventListener('click', Controller.saveRating);
@@ -169,6 +199,9 @@
 	        View.threeStarFilterBtn.addEventListener('click', View.filterThreeStars);
 	        View.twoStarFilterBtn.addEventListener('click', View.filterTwoStars);
 	        View.oneStarFilterBtn.addEventListener('click', View.filterOneStar);
+	        View.cartNumberFilterBtn.addEventListener('click', View.filterByCart);
+	        View.resetFilterBtn.addEventListener('click', View._resetFilters);
+	        View.showHideFiltersBtn.addEventListener('click', Controller.showHideFilters);
 	        // View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
 	    }
 	};
@@ -182,10 +215,18 @@
 	        View.bindUIEvents();
 	    },
 	    showHideAddRating: function showHideAddRating() {
-	        if (View.addRatingContainer.style.display === 'block') {
+	        if (View.addRatingItems.style.display === 'block') {
 	            View.hideAddRating();
 	        } else {
 	            View.showAddRating();
+	        }
+	    },
+	    showHideFilters: function showHideFilters() {
+	        console.log(View.filterItems.style.display);
+	        if (View.filterItems.style.display === 'block') {
+	            View.filterItems.style.display = 'none';
+	        } else {
+	            View.filterItems.style.display = 'block';
 	        }
 	    },
 	    saveRating: function saveRating() {
