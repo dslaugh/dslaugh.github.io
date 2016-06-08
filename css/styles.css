@@ -32,12 +32,14 @@ html, body {
     padding: 3px 5px;
 }
 .box {
-    display: none;
     font-size: 30px;
     padding: 10px;
     border: 1px solid #333;
     vertical-align: top;
     margin: 0 0 10px 0;
+}
+.hidden {
+    display: none;
 }
 .add-rating-title {
     background-color: rgba(0, 0, 0, 0.5);

@@ -12,7 +12,7 @@
             <!-- <button id="ResetRatings">Reset</button> -->
         </header>
         <div class="main-container">
-            <div class="box" id="AddRatingContainer">
+            <div class="box hidden" id="AddRatingContainer">
                 <div class="add-rating-title">Add New Rating</div>
                 <input type="text" id="CartNumber" size="3" class="cart-number-input" />
                 <label for="CartNumber">Cart Number</label>
@@ -87,6 +87,14 @@
                     </label>
                 </div>
                 <button type="button" class="big-btn" id="SaveRatingBtn">Save</button>
+            </div>
+            <div class="box">
+                Filter:
+                <div><button type="button" id="FiveStarFilterBtn">5 Stars</button></div>
+                <div><button type="button" id="FourStarFilterBtn">4 Stars</button></div>
+                <div><button type="button" id="ThreeStarFilterBtn">3 Stars</button></div>
+                <div><button type="button" id="TwoStarFilterBtn">2 Stars</button></div>
+                <div><button type="button" id="OneStarFilterBtn">1 Stars</button></div>
             </div>
             <table id="TopCarts" class="ratings-table">
                 <thead>
