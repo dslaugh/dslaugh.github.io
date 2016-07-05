@@ -60,11 +60,21 @@
 	    events: (0, _CustomEvents2.default)(),
 	    cart_ratings: [],
 	    loadRatings: function loadRatings() {
+	        Model.resetRatings();
 	        Model.cart_ratings = _LocStore2.default.get('cart_ratings') || [];
 	        Model.events.emit('ratings_loaded', Model.cart_ratings);
 	    },
 	    addRating: function addRating(rating) {
-	        Model.cart_ratings.push(rating);
+	        // Check to see if cart rating already exists and replace if so.
+	        var existing = Model.cart_ratings.filter(function (r) {
+	            return r.number === rating.number;
+	        });
+	        if (existing.length > 0) {
+	            var index = Model.cart_ratings.indexOf(existing[0]);
+	            Model.cart_ratings.splice(index, 1, rating);
+	        } else {
+	            Model.cart_ratings.push(rating);
+	        }
 	        Model._writeToLocalStorage();
 	        Model.events.emit('rating_added', Model.cart_ratings);
 	    },
