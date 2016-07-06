@@ -5,7 +5,6 @@ var Model = {
     events: CustomEvents(),
     cart_ratings: [],
     loadRatings: () => {
-        Model.resetRatings();
         Model.cart_ratings = LocStore.get('cart_ratings') || [];
         Model.events.emit('ratings_loaded', Model.cart_ratings);
     },
