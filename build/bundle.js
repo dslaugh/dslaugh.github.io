@@ -65,7 +65,7 @@
 	        Model.events.emit('ratings_loaded', Model.cart_ratings);
 	    },
 	    addRating: function addRating(rating) {
-	        // Check to see if cart rating already exists and replace if so.
+	        // Check to see if cart rating already exists and replace it if so.
 	        var existing = Model.cart_ratings.filter(function (r) {
 	            return r.number === rating.number;
 	        });
@@ -79,9 +79,12 @@
 	        Model.events.emit('rating_added', Model.cart_ratings);
 	    },
 	    resetRatings: function resetRatings() {
-	        Model.cart_ratings = [];
-	        Model._writeToLocalStorage();
-	        Model.events.emit('ratings_reset', Model.cart_ratings);
+	        var ok = confirm('Are you sure you want to reset ratings?');
+	        if (ok) {
+	            Model.cart_ratings = [];
+	            Model._writeToLocalStorage();
+	            Model.events.emit('ratings_reset', Model.cart_ratings);
+	        }
 	    },
 	    _writeToLocalStorage: function _writeToLocalStorage() {
 	        _LocStore2.default.set('cart_ratings', Model.cart_ratings);

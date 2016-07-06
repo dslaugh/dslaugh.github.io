@@ -5,6 +5,7 @@ var Model = {
     events: CustomEvents(),
     cart_ratings: [],
     loadRatings: () => {
+        Model.resetRatings();
         Model.cart_ratings = LocStore.get('cart_ratings') || [];
         Model.events.emit('ratings_loaded', Model.cart_ratings);
     },
@@ -23,9 +24,12 @@ var Model = {
         Model.events.emit('rating_added', Model.cart_ratings);
     },
     resetRatings: () => {
-        Model.cart_ratings = [];
-        Model._writeToLocalStorage();
-        Model.events.emit('ratings_reset', Model.cart_ratings);
+        var ok = confirm('Are you sure you want to reset ratings?');
+        if (ok) {
+            Model.cart_ratings = [];
+            Model._writeToLocalStorage();
+            Model.events.emit('ratings_reset', Model.cart_ratings);
+        }
     },
     _writeToLocalStorage: () => {
         LocStore.set('cart_ratings', Model.cart_ratings);
