@@ -60,7 +60,6 @@
 	    events: (0, _CustomEvents2.default)(),
 	    cart_ratings: [],
 	    loadRatings: function loadRatings() {
-	        Model.resetRatings();
 	        Model.cart_ratings = _LocStore2.default.get('cart_ratings') || [];
 	        Model.events.emit('ratings_loaded', Model.cart_ratings);
 	    },

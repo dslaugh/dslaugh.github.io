@@ -12,6 +12,25 @@
             <!-- <button id="ResetRatings">Reset</button> -->
         </header>
         <div class="main-container">
+            <div class="box">
+                <div class="filter-box-row box-title" id="ShowHideFiltersBtn">Filters</div>
+                <div id="FilterItems" class="hidden">
+                    <div class="filter-box-row">
+                        <button type="button" class="filter-btn" id="FiveStarFilterBtn">5 Stars</button>
+                        <button type="button" class="filter-btn" id="FourStarFilterBtn">4 Stars</button>
+                        <button type="button" class="filter-btn" id="ThreeStarFilterBtn">3 Stars</button>
+                        <button type="button" class="filter-btn" id="TwoStarFilterBtn">2 Stars</button>
+                        <button type="button" class="filter-btn" id="OneStarFilterBtn">1 Star</button>
+                    </div>
+                    <div class="filter-box-row">
+                        Cart # <input type="text" class="cart-number-input" size="3" id="CartNumberFilterInput" />
+                        <button type="button" class="filter-btn cart-filter-btn" id="CartNumberFilterBtn">Find</button>
+                    </div>
+                    <div class="filter-box-row">
+                        <button type="button" class="filter-btn cart-filter-btn" id="ResetFilterBtn">Reset</button>
+                    </div>
+                </div>
+            </div>
             <div class="box" id="AddRatingContainer">
                 <div class="box-title" id="AddRatingBtn">Add New Rating</div>
                 <div id="AddRatingItems" class="hidden">
@@ -88,25 +107,6 @@
                         </label>
                     </div>
                     <button type="button" class="big-btn" id="SaveRatingBtn">Save</button>
-                </div>
-            </div>
-            <div class="box">
-                <div class="filter-box-row box-title" id="ShowHideFiltersBtn">Filters</div>
-                <div id="FilterItems" class="hidden">
-                    <div class="filter-box-row">
-                        <button type="button" class="filter-btn" id="FiveStarFilterBtn">5 Stars</button>
-                        <button type="button" class="filter-btn" id="FourStarFilterBtn">4 Stars</button>
-                        <button type="button" class="filter-btn" id="ThreeStarFilterBtn">3 Stars</button>
-                        <button type="button" class="filter-btn" id="TwoStarFilterBtn">2 Stars</button>
-                        <button type="button" class="filter-btn" id="OneStarFilterBtn">1 Star</button>
-                    </div>
-                    <div class="filter-box-row">
-                        Cart # <input type="text" class="cart-number-input" size="3" id="CartNumberFilterInput" />
-                        <button type="button" class="filter-btn cart-filter-btn" id="CartNumberFilterBtn">Find</button>
-                    </div>
-                    <div class="filter-box-row">
-                        <button type="button" class="filter-btn cart-filter-btn" id="ResetFilterBtn">Reset</button>
-                    </div>
                 </div>
             </div>
             <table id="TopCarts" class="ratings-table">
