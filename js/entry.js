@@ -4,34 +4,34 @@ import LocStore from './LocStore';
 var Model = {
     events: CustomEvents(),
     cart_ratings: [],
-    loadRatings: () => {
-        Model.cart_ratings = LocStore.get('cart_ratings') || [];
-        Model.events.emit('ratings_loaded', Model.cart_ratings);
+    loadRatings: function() {
+        this.cart_ratings = LocStore.get('cart_ratings') || [];
+        this.events.emit('ratings_loaded', this.cart_ratings);
     },
-    addRating: (rating) => {
+    addRating: function(rating) {
         // Check to see if cart rating already exists and replace it if so.
-        var existing = Model.cart_ratings.filter((r) => {
+        var existing = this.cart_ratings.filter((r) => {
             return r.number === rating.number;
         });
         if (existing.length > 0) {
-            var index = Model.cart_ratings.indexOf(existing[0]);
-            Model.cart_ratings.splice(index, 1, rating);
+            var index = this.cart_ratings.indexOf(existing[0]);
+            this.cart_ratings.splice(index, 1, rating);
         } else {
-            Model.cart_ratings.push(rating);
+            this.cart_ratings.push(rating);
         }
-        Model._writeToLocalStorage();
-        Model.events.emit('rating_added', Model.cart_ratings);
+        this._writeToLocalStorage();
+        this.events.emit('rating_added', this.cart_ratings);
     },
-    resetRatings: () => {
+    resetRatings: function() {
         var ok = confirm('Are you sure you want to reset ratings?');
         if (ok) {
-            Model.cart_ratings = [];
-            Model._writeToLocalStorage();
-            Model.events.emit('ratings_reset', Model.cart_ratings);
+            this.cart_ratings = [];
+            this._writeToLocalStorage();
+            this.events.emit('ratings_reset', this.cart_ratings);
         }
     },
-    _writeToLocalStorage: () => {
-        LocStore.set('cart_ratings', Model.cart_ratings);
+    _writeToLocalStorage: function() {
+        LocStore.set('cart_ratings', this.cart_ratings);
     }
 };
 
@@ -53,24 +53,24 @@ var View = {
     resetFilterBtn: document.querySelector('#ResetFilterBtn'),
     filterItems: document.querySelector('#FilterItems'),
     showHideFiltersBtn: document.querySelector('#ShowHideFiltersBtn'),
-    renderRatings: (ratings) => {
+    renderRatings: function(ratings) {
         let sortedRatings = ratings.sort((a, b) => {
             a.score = parseInt(a.score, 10);
             b.score = parseInt(b.score, 10);
             return b.score - a.score;
         });
 
-        View.ratingsList.innerHTML = sortedRatings.reduce((prevVal, currVal) => {
-            return prevVal + '<tr><td class="cart-number">' + currVal.number + '</td><td class="stars">' + View.renderStars(currVal.score) + '</td></tr>';
+        this.ratingsList.innerHTML = sortedRatings.reduce((prevVal, currVal) => {
+            return prevVal + '<tr><td class="cart-number">' + currVal.number + '</td><td class="stars">' + this.renderStars(currVal.score) + '</td></tr>';
         }, '');
     },
-    showAddRating: () => {
-        View.addRatingItems.style.display = 'block';
+    showAddRating: function() {
+        this.addRatingItems.style.display = 'block';
     },
-    hideAddRating: () => {
-        View.addRatingItems.style.display = 'none';
+    hideAddRating: function() {
+        this.addRatingItems.style.display = 'none';
     },
-    renderStars: (numStars) => {
+    renderStars: function(numStars) {
         let i = 0;
         let stars = '';
         for(; i<numStars; i++) {
@@ -81,31 +81,31 @@ var View = {
         }
         return stars;
     },
-    resetRatingForm: () => {
-        View.cartNumber.value = '';
-        View.ratings.forEach((rating) => {
+    resetRatingForm: function() {
+        this.cartNumber.value = '';
+        this.ratings.forEach((rating) => {
             rating.checked = false;
         });
     },
-    filterFiveStars: () => {
-        View._filterByStars(5);
+    filterFiveStars: function() {
+        this._filterByStars(5);
     },
-    filterFourStars: () => {
-        View._filterByStars(4);
+    filterFourStars: function() {
+        this._filterByStars(4);
     },
-    filterThreeStars: () => {
-        View._filterByStars(3);
+    filterThreeStars: function() {
+        this._filterByStars(3);
     },
-    filterTwoStars: () => {
-        View._filterByStars(2);
+    filterTwoStars: function() {
+        this._filterByStars(2);
     },
-    filterOneStar: () => {
-        View._filterByStars(1);
+    filterOneStar: function() {
+        this._filterByStars(1);
     },
-    _filterByStars: (numStars) => {
-        View._resetFilters();
+    _filterByStars: function(numStars) {
+        this._clearFilters();
 
-        let rows = View.ratingsList.querySelectorAll('tr');
+        let rows = this.ratingsList.querySelectorAll('tr');
         let i = 0;
         let len = rows.length;
         for (; i<len; i++) {
@@ -116,18 +116,18 @@ var View = {
             }
         }
     },
-    filterByCart: () => {
-        let cartNumber = parseInt(View.cartNumberFilterInput.value, 10);
+    filterByCart: function() {
+        let cartNumber = parseInt(this.cartNumberFilterInput.value, 10);
         if (isNaN(cartNumber)) {
             alert('Cart number must be a number');
             return false;
         }
-        View._filterByCartNumber(cartNumber);
+        this._filterByCartNumber(cartNumber);
     },
-    _filterByCartNumber: (cartNumber) => {
-        View._resetFilters();
+    _filterByCartNumber: function(cartNumber) {
+        this._clearFilters();
 
-        let rows = View.ratingsList.querySelectorAll('tr');
+        let rows = this.ratingsList.querySelectorAll('tr');
         let i = 0;
         let len = rows.length;
         for (; i<len; i++) {
@@ -137,59 +137,62 @@ var View = {
             }
         }
     },
-    _resetFilters: () => {
-        let rows = View.ratingsList.querySelectorAll('tr');
+    resetFilters: function() {
+        this.cartNumberFilterInput.value = '';
+        this._clearFilters();
+    },
+    _clearFilters: function() {
+        let rows = this.ratingsList.querySelectorAll('tr');
         let i = 0;
         let len = rows.length;
         for (; i<len; i++) {
             rows[i].style.display = 'table-row';
         }
     },
-    showFilterItems: () => {
-        View.filterItems.display = 'block';
+    showFilterItems: function() {
+        this.filterItems.display = 'block';
     },
-    hideFilterItems: () => {
-        View.filterItems.display = 'none';
+    hideFilterItems: function() {
+        this.filterItems.display = 'none';
     },
-    bindUIEvents: () => {
-        View.saveRatingBtn.addEventListener('click', Controller.saveRating);
-        View.addRatingBtn.addEventListener('click', Controller.showHideAddRating);
-        View.fiveStarFilterBtn.addEventListener('click', View.filterFiveStars);
-        View.fourStarFilterBtn.addEventListener('click', View.filterFourStars);
-        View.threeStarFilterBtn.addEventListener('click', View.filterThreeStars);
-        View.twoStarFilterBtn.addEventListener('click', View.filterTwoStars);
-        View.oneStarFilterBtn.addEventListener('click', View.filterOneStar);
-        View.cartNumberFilterBtn.addEventListener('click', View.filterByCart);
-        View.resetFilterBtn.addEventListener('click', View._resetFilters);
-        View.showHideFiltersBtn.addEventListener('click', Controller.showHideFilters);
+    bindUIEvents: function() {
+        this.saveRatingBtn.addEventListener('click', Controller.saveRating);
+        this.addRatingBtn.addEventListener('click', Controller.showHideAddRating);
+        this.fiveStarFilterBtn.addEventListener('click', this.filterFiveStars.bind(View));
+        this.fourStarFilterBtn.addEventListener('click', this.filterFourStars.bind(View));
+        this.threeStarFilterBtn.addEventListener('click', this.filterThreeStars.bind(View));
+        this.twoStarFilterBtn.addEventListener('click', this.filterTwoStars.bind(View));
+        this.oneStarFilterBtn.addEventListener('click', this.filterOneStar.bind(View));
+        this.cartNumberFilterBtn.addEventListener('click', this.filterByCart.bind(View));
+        this.resetFilterBtn.addEventListener('click', this.resetFilters.bind(View));
+        this.showHideFiltersBtn.addEventListener('click', Controller.showHideFilters);
         // View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
     }
 };
 
 var Controller = {
-    initialize: () => {
-        Model.events.on('ratings_loaded', View.renderRatings);
-        Model.events.on('rating_added', View.renderRatings);
-        Model.events.on('ratings_reset', View.renderRatings);
+    initialize: function() {
+        Model.events.on('ratings_loaded', View.renderRatings.bind(View));
+        Model.events.on('rating_added', View.renderRatings.bind(View));
+        Model.events.on('ratings_reset', View.renderRatings.bind(View));
         Model.loadRatings();
         View.bindUIEvents();
     },
-    showHideAddRating: () => {
+    showHideAddRating: function() {
         if (View.addRatingItems.style.display === 'block') {
             View.hideAddRating();
         } else {
             View.showAddRating();
         }
     },
-    showHideFilters: () => {
-        console.log(View.filterItems.style.display);
+    showHideFilters: function() {
         if (View.filterItems.style.display === 'block') {
             View.filterItems.style.display = 'none';
         } else {
             View.filterItems.style.display = 'block';
         }
     },
-    saveRating: () => {
+    saveRating: function() {
         let score = View.ratings.filter((rating) => {
             return rating.checked === true;
         });
@@ -208,7 +211,7 @@ var Controller = {
         View.resetRatingForm();
         View.hideAddRating();
     },
-    resetRatings: () => {
+    resetRatings: function() {
         Model.resetRatings();
     }
 };

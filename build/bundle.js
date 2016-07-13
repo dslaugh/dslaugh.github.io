@@ -60,33 +60,33 @@
 	    events: (0, _CustomEvents2.default)(),
 	    cart_ratings: [],
 	    loadRatings: function loadRatings() {
-	        Model.cart_ratings = _LocStore2.default.get('cart_ratings') || [];
-	        Model.events.emit('ratings_loaded', Model.cart_ratings);
+	        this.cart_ratings = _LocStore2.default.get('cart_ratings') || [];
+	        this.events.emit('ratings_loaded', this.cart_ratings);
 	    },
 	    addRating: function addRating(rating) {
 	        // Check to see if cart rating already exists and replace it if so.
-	        var existing = Model.cart_ratings.filter(function (r) {
+	        var existing = this.cart_ratings.filter(function (r) {
 	            return r.number === rating.number;
 	        });
 	        if (existing.length > 0) {
-	            var index = Model.cart_ratings.indexOf(existing[0]);
-	            Model.cart_ratings.splice(index, 1, rating);
+	            var index = this.cart_ratings.indexOf(existing[0]);
+	            this.cart_ratings.splice(index, 1, rating);
 	        } else {
-	            Model.cart_ratings.push(rating);
+	            this.cart_ratings.push(rating);
 	        }
-	        Model._writeToLocalStorage();
-	        Model.events.emit('rating_added', Model.cart_ratings);
+	        this._writeToLocalStorage();
+	        this.events.emit('rating_added', this.cart_ratings);
 	    },
 	    resetRatings: function resetRatings() {
 	        var ok = confirm('Are you sure you want to reset ratings?');
 	        if (ok) {
-	            Model.cart_ratings = [];
-	            Model._writeToLocalStorage();
-	            Model.events.emit('ratings_reset', Model.cart_ratings);
+	            this.cart_ratings = [];
+	            this._writeToLocalStorage();
+	            this.events.emit('ratings_reset', this.cart_ratings);
 	        }
 	    },
 	    _writeToLocalStorage: function _writeToLocalStorage() {
-	        _LocStore2.default.set('cart_ratings', Model.cart_ratings);
+	        _LocStore2.default.set('cart_ratings', this.cart_ratings);
 	    }
 	};
 
@@ -109,21 +109,23 @@
 	    filterItems: document.querySelector('#FilterItems'),
 	    showHideFiltersBtn: document.querySelector('#ShowHideFiltersBtn'),
 	    renderRatings: function renderRatings(ratings) {
+	        var _this = this;
+
 	        var sortedRatings = ratings.sort(function (a, b) {
 	            a.score = parseInt(a.score, 10);
 	            b.score = parseInt(b.score, 10);
 	            return b.score - a.score;
 	        });
 
-	        View.ratingsList.innerHTML = sortedRatings.reduce(function (prevVal, currVal) {
-	            return prevVal + '<tr><td class="cart-number">' + currVal.number + '</td><td class="stars">' + View.renderStars(currVal.score) + '</td></tr>';
+	        this.ratingsList.innerHTML = sortedRatings.reduce(function (prevVal, currVal) {
+	            return prevVal + '<tr><td class="cart-number">' + currVal.number + '</td><td class="stars">' + _this.renderStars(currVal.score) + '</td></tr>';
 	        }, '');
 	    },
 	    showAddRating: function showAddRating() {
-	        View.addRatingItems.style.display = 'block';
+	        this.addRatingItems.style.display = 'block';
 	    },
 	    hideAddRating: function hideAddRating() {
-	        View.addRatingItems.style.display = 'none';
+	        this.addRatingItems.style.display = 'none';
 	    },
 	    renderStars: function renderStars(numStars) {
 	        var i = 0;
@@ -134,30 +136,30 @@
 	        return stars;
 	    },
 	    resetRatingForm: function resetRatingForm() {
-	        View.cartNumber.value = '';
-	        View.ratings.forEach(function (rating) {
+	        this.cartNumber.value = '';
+	        this.ratings.forEach(function (rating) {
 	            rating.checked = false;
 	        });
 	    },
 	    filterFiveStars: function filterFiveStars() {
-	        View._filterByStars(5);
+	        this._filterByStars(5);
 	    },
 	    filterFourStars: function filterFourStars() {
-	        View._filterByStars(4);
+	        this._filterByStars(4);
 	    },
 	    filterThreeStars: function filterThreeStars() {
-	        View._filterByStars(3);
+	        this._filterByStars(3);
 	    },
 	    filterTwoStars: function filterTwoStars() {
-	        View._filterByStars(2);
+	        this._filterByStars(2);
 	    },
 	    filterOneStar: function filterOneStar() {
-	        View._filterByStars(1);
+	        this._filterByStars(1);
 	    },
 	    _filterByStars: function _filterByStars(numStars) {
-	        View._resetFilters();
+	        this._clearFilters();
 
-	        var rows = View.ratingsList.querySelectorAll('tr');
+	        var rows = this.ratingsList.querySelectorAll('tr');
 	        var i = 0;
 	        var len = rows.length;
 	        for (; i < len; i++) {
@@ -169,17 +171,17 @@
 	        }
 	    },
 	    filterByCart: function filterByCart() {
-	        var cartNumber = parseInt(View.cartNumberFilterInput.value, 10);
+	        var cartNumber = parseInt(this.cartNumberFilterInput.value, 10);
 	        if (isNaN(cartNumber)) {
 	            alert('Cart number must be a number');
 	            return false;
 	        }
-	        View._filterByCartNumber(cartNumber);
+	        this._filterByCartNumber(cartNumber);
 	    },
 	    _filterByCartNumber: function _filterByCartNumber(cartNumber) {
-	        View._resetFilters();
+	        this._clearFilters();
 
-	        var rows = View.ratingsList.querySelectorAll('tr');
+	        var rows = this.ratingsList.querySelectorAll('tr');
 	        var i = 0;
 	        var len = rows.length;
 	        for (; i < len; i++) {
@@ -189,8 +191,12 @@
 	            }
 	        }
 	    },
-	    _resetFilters: function _resetFilters() {
-	        var rows = View.ratingsList.querySelectorAll('tr');
+	    resetFilters: function resetFilters() {
+	        this.cartNumberFilterInput.value = '';
+	        this._clearFilters();
+	    },
+	    _clearFilters: function _clearFilters() {
+	        var rows = this.ratingsList.querySelectorAll('tr');
 	        var i = 0;
 	        var len = rows.length;
 	        for (; i < len; i++) {
@@ -198,31 +204,31 @@
 	        }
 	    },
 	    showFilterItems: function showFilterItems() {
-	        View.filterItems.display = 'block';
+	        this.filterItems.display = 'block';
 	    },
 	    hideFilterItems: function hideFilterItems() {
-	        View.filterItems.display = 'none';
+	        this.filterItems.display = 'none';
 	    },
 	    bindUIEvents: function bindUIEvents() {
-	        View.saveRatingBtn.addEventListener('click', Controller.saveRating);
-	        View.addRatingBtn.addEventListener('click', Controller.showHideAddRating);
-	        View.fiveStarFilterBtn.addEventListener('click', View.filterFiveStars);
-	        View.fourStarFilterBtn.addEventListener('click', View.filterFourStars);
-	        View.threeStarFilterBtn.addEventListener('click', View.filterThreeStars);
-	        View.twoStarFilterBtn.addEventListener('click', View.filterTwoStars);
-	        View.oneStarFilterBtn.addEventListener('click', View.filterOneStar);
-	        View.cartNumberFilterBtn.addEventListener('click', View.filterByCart);
-	        View.resetFilterBtn.addEventListener('click', View._resetFilters);
-	        View.showHideFiltersBtn.addEventListener('click', Controller.showHideFilters);
+	        this.saveRatingBtn.addEventListener('click', Controller.saveRating);
+	        this.addRatingBtn.addEventListener('click', Controller.showHideAddRating);
+	        this.fiveStarFilterBtn.addEventListener('click', this.filterFiveStars.bind(View));
+	        this.fourStarFilterBtn.addEventListener('click', this.filterFourStars.bind(View));
+	        this.threeStarFilterBtn.addEventListener('click', this.filterThreeStars.bind(View));
+	        this.twoStarFilterBtn.addEventListener('click', this.filterTwoStars.bind(View));
+	        this.oneStarFilterBtn.addEventListener('click', this.filterOneStar.bind(View));
+	        this.cartNumberFilterBtn.addEventListener('click', this.filterByCart.bind(View));
+	        this.resetFilterBtn.addEventListener('click', this.resetFilters.bind(View));
+	        this.showHideFiltersBtn.addEventListener('click', Controller.showHideFilters);
 	        // View.resetRatingsBtn.addEventListener('click', Controller.resetRatings);
 	    }
 	};
 
 	var Controller = {
 	    initialize: function initialize() {
-	        Model.events.on('ratings_loaded', View.renderRatings);
-	        Model.events.on('rating_added', View.renderRatings);
-	        Model.events.on('ratings_reset', View.renderRatings);
+	        Model.events.on('ratings_loaded', View.renderRatings.bind(View));
+	        Model.events.on('rating_added', View.renderRatings.bind(View));
+	        Model.events.on('ratings_reset', View.renderRatings.bind(View));
 	        Model.loadRatings();
 	        View.bindUIEvents();
 	    },
@@ -234,7 +240,6 @@
 	        }
 	    },
 	    showHideFilters: function showHideFilters() {
-	        console.log(View.filterItems.style.display);
 	        if (View.filterItems.style.display === 'block') {
 	            View.filterItems.style.display = 'none';
 	        } else {
