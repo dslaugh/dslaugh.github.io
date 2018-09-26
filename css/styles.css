@@ -18,7 +18,7 @@ html, body {
 }
 .ratings-table {
     width: 100%;
-    border: 1px solid #333;
+    border: 1px solid #333333;
     font-size: 30px;
     border-collapse: collapse;
 }
@@ -28,13 +28,13 @@ html, body {
 }
 .ratings-table th,
 .ratings-table td {
-    border: 1px solid #333;
+    border: 1px solid #333333;
     padding: 3px 5px;
 }
 .box {
     font-size: 30px;
     padding: 10px;
-    border: 1px solid #333;
+    border: 1px solid #333333;
     vertical-align: top;
     margin: 0 0 10px 0;
 }
