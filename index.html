@@ -282,7 +282,7 @@
           stopTimer();
           roundDisplay.textContent = "Tournament Over";
           blindsDisplay.textContent = "Congratulations!";
-          timerDisplay.textContent = "GG";
+          timerDisplay.innerHTML = "<div>&nbsp;</div><div>GG</div><div>&nbsp;</div>";
         }
         return false;
       }
@@ -556,4 +556,6 @@
     };
   </script>
 </body>
+
 </html>
+
