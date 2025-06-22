@@ -25,6 +25,8 @@
     }
 
     .timer-display {
+      display: grid;
+      grid-template-columns: 5fr 1fr 5fr;
       font-size: 5rem;
       line-height: 1;
       letter-spacing: 0.1em;
@@ -133,7 +135,11 @@
     <!-- Main Displays -->
     <div class="my-6">
       <div id="round-display" class="text-xl sm:text-2xl text-gray-300 mb-2">Round 1</div>
-      <div id="timer-display" class="timer-display font-bold">00:00</div>
+      <div id="timer-display" class="timer-display font-bold">
+        <div id="timer-display-minutes" style="justify-self: end;">00</div>
+        <div>:</div>
+        <div id="timer-display-seconds" style="justify-self: start;">00</div>
+      </div>
       <div id="blinds-display" class="blinds-display font-bold mt-2">Blinds: 25 / 50</div>
     </div>
 
@@ -189,6 +195,8 @@
   <script>
     // DOM Elements
     const timerDisplay = document.getElementById('timer-display');
+    const timerDisplayMinutes = document.getElementById('timer-display-minutes');
+    const timerDisplaySeconds = document.getElementById('timer-display-seconds');
     const roundDisplay = document.getElementById('round-display');
     const blindsDisplay = document.getElementById('blinds-display');
     const startBtn = document.getElementById('start-btn');
@@ -259,7 +267,8 @@
     function updateDisplay() {
       const displayMinutes = Math.floor(totalSeconds / 60);
       const displaySeconds = totalSeconds % 60;
-      timerDisplay.textContent = `${String(displayMinutes).padStart(2, '0')}:${String(displaySeconds).padStart(2, '0')}`;
+      timerDisplayMinutes.textContent = String(displayMinutes).padStart(2, '0');
+      timerDisplaySeconds.textContent = String(displaySeconds).padStart(2, '0');
     }
 
     function updateNavButtons() {
@@ -547,5 +556,4 @@
     };
   </script>
 </body>
-
 </html>
