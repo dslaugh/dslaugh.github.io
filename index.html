@@ -1,585 +1,504 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tournament Countdown Timer</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --glow-color: #3b82f6;
-      /* Blue-500, default */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texas Hold-Em Extravaganza</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Neon Glow Effects */
+        :root {
+            --neon-color: #A020F0; /* Violet */
+        }
+        .neon-text {
+            text-shadow:
+                0 0 5px var(--neon-color),
+                0 0 10px var(--neon-color),
+                0 0 20px var(--neon-color),
+                0 0 40px var(--neon-color),
+                0 0 80px var(--neon-color);
+        }
+        .neon-box {
+            box-shadow: 0 0 .2rem #fff,
+                        0 0 .2rem #fff,
+                        0 0 2rem var(--neon-color),
+                        0 0 0.8rem var(--neon-color),
+                        0 0 2.8rem var(--neon-color),
+                        inset 0 0 1.3rem var(--neon-color);
+        }
+        .neon-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color);
+        }
+        .neon-button:hover:not(:disabled) {
+            box-shadow: 0 0 10px var(--neon-color), 0 0 20px var(--neon-color), 0 0 40px var(--neon-color);
+            transform: translateY(-2px);
+        }
+        .neon-button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .font-roboto {
+            font-family: 'Roboto', sans-serif;
+        }
+        .modal-backdrop {
+            background-color: rgba(0,0,0,0.8);
+        }
 
-    body {
-      font-family: 'Orbitron', sans-serif;
-      background-color: #111827;
-      /* Gray-900 */
-      color: #f9fafb;
-      /* Gray-50 */
-    }
-
-    .timer-display {
-      display: grid;
-      grid-template-columns: 5fr 1fr 5fr;
-      font-size: 5rem;
-      line-height: 1;
-      letter-spacing: 0.1em;
-      transition: text-shadow 0.3s ease;
-      /* Reduced glow effect */
-      text-shadow:
-        0 0 5px var(--glow-color),
-        0 0 15px var(--glow-color);
-    }
-
-    @media (min-width: 640px) {
-      .timer-display {
-        font-size: 7rem;
-      }
-    }
-
-    .blinds-display {
-      font-size: 2rem;
-      letter-spacing: 0.05em;
-      color: var(--glow-color);
-      text-shadow: 0 0 8px var(--glow-color);
-      transition: all 0.3s ease;
-    }
-
-    @media (min-width: 640px) {
-      .blinds-display {
-        font-size: 2.5rem;
-      }
-    }
-
-    .neon-button {
-      transition: all 0.3s ease;
-      border: 2px solid var(--glow-color);
-      color: var(--glow-color);
-      background-color: transparent;
-      text-shadow: 0 0 2px var(--glow-color);
-      box-shadow: inset 0 0 8px var(--glow-color), 0 0 8px var(--glow-color);
-    }
-
-    .neon-button:hover,
-    .neon-button:focus {
-      color: #111827;
-      background-color: var(--glow-color);
-      box-shadow: inset 0 0 10px var(--glow-color), 0 0 20px var(--glow-color), 0 0 30px var(--glow-color);
-      text-shadow: none;
-    }
-
-    .neon-button:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      background-color: transparent !important;
-      color: var(--glow-color) !important;
-      text-shadow: 0 0 2px var(--glow-color) !important;
-      box-shadow: inset 0 0 8px var(--glow-color), 0 0 8px var(--glow-color) !important;
-    }
-
-    input,
-    select {
-      background-color: #1f2937;
-      border: 2px solid #374151;
-      color: #f9fafb;
-      transition: all 0.3s ease;
-      -moz-appearance: textfield;
-    }
-
-    input:focus,
-    select:focus {
-      outline: none;
-      border-color: var(--glow-color);
-      box-shadow: 0 0 10px var(--glow-color);
-    }
-
-    .color-swatch {
-      width: 28px;
-      height: 28px;
-      border-radius: 9999px;
-      cursor: pointer;
-      border: 2px solid #4b5563;
-      transition: all 0.2s ease;
-    }
-
-    .color-swatch:hover {
-      transform: scale(1.15);
-    }
-
-    .color-swatch.active {
-      border-color: #f9fafb;
-      box-shadow: 0 0 8px currentColor;
-    }
-
-    #schedule-editor,
-    #color-editor {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.7s ease-in-out;
-    }
-  </style>
+        .custom-grid {
+            display: grid;
+            grid-template-columns: 5fr 1fr 5fr;
+        }
+    </style>
 </head>
+<body class="bg-gray-900 text-white font-roboto antialiased flex items-center justify-center min-h-screen p-4">
 
-<body class="flex items-center justify-center min-h-screen">
+    <div id="app" class="w-full max-w-5xl mx-auto">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl md:text-6xl font-orbitron font-bold neon-text">Chris Barra's Texas Hold-Em Extravaganza</h1>
+        </header>
 
-  <div class="w-full max-w-3xl mx-auto p-4 text-center">
-    <h1 class="text-3xl sm:text-5xl font-bold mb-4 text-white" style="text-shadow: 0 0 10px var(--glow-color);">
-      Tournament Timer</h1>
+        <main class="bg-gray-800 bg-opacity-50 border-2 border-[var(--neon-color)] rounded-2xl p-4 md:p-8 neon-box">
+            <!-- Timer Display -->
+            <section id="timer-display" class="text-center mb-6 h-[115px] flex items-center justify-center">
+                <div id="timer" class="custom-grid text-8xl md:text-9xl font-orbitron font-bold text-white neon-text w-full">
+                    <div id="display-minutes" class="justify-self-end">15</div>
+                    <div>:</div>
+                    <div id="display-seconds" class="justify-self-start">00</div>
+                </div>
+            </section>
 
-    <!-- Main Displays -->
-    <div class="my-6">
-      <div id="round-display" class="text-xl sm:text-2xl text-gray-300 mb-2">Round 1</div>
-      <div id="timer-display" class="timer-display font-bold">
-        <div id="timer-display-minutes" style="justify-self: end;">00</div>
-        <div>:</div>
-        <div id="timer-display-seconds" style="justify-self: start;">00</div>
-      </div>
-      <div id="blinds-display" class="blinds-display font-bold mt-2">Blinds: 25 / 50</div>
+            <!-- Blinds and Round Info -->
+            <section id="info-display" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-6">
+                <div class="bg-gray-900 p-4 rounded-lg border border-[var(--neon-color)]">
+                    <h2 class="text-lg md:text-xl font-bold text-[var(--neon-color)] uppercase tracking-wider">Round</h2>
+                    <p id="round-info" class="text-2xl md:text-3xl font-orbitron">1 / 15</p>
+                </div>
+                <div class="bg-gray-900 p-4 rounded-lg border-2 border-[var(--neon-color)] neon-box">
+                    <h2 class="text-lg md:text-xl font-bold text-[var(--neon-color)] uppercase tracking-wider">Current Blinds</h2>
+                    <p id="current-blinds" class="text-3xl md:text-4xl font-orbitron">25 / 50</p>
+                </div>
+                <div class="bg-gray-900 p-4 rounded-lg border border-[var(--neon-color)]">
+                    <h2 class="text-lg md:text-xl font-bold text-[var(--neon-color)] uppercase tracking-wider">Next Blinds</h2>
+                    <p id="next-blinds" class="text-2xl md:text-3xl font-orbitron">50 / 100</p>
+                </div>
+            </section>
+            
+            <!-- Controls -->
+            <section id="controls" class="flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-6">
+                <button id="prev-round-btn" class="neon-button bg-[var(--neon-color)] text-white font-bold py-3 px-6 rounded-lg text-lg uppercase">Prev</button>
+                <button id="play-pause-btn" class="neon-button bg-[var(--neon-color)] text-white font-bold py-4 px-8 rounded-lg text-xl uppercase">Start</button>
+                <button id="next-round-btn" class="neon-button bg-[var(--neon-color)] text-white font-bold py-3 px-6 rounded-lg text-lg uppercase">Next</button>
+            </section>
+
+            <section class="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+                 <button id="reset-round-btn" class="neon-button bg-gray-700 text-white font-bold py-2 px-4 rounded-lg text-md uppercase">Reset Round</button>
+                 <button id="end-tournament-btn" class="neon-button bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-md uppercase">End Tournament</button>
+            </section>
+
+        </main>
+
+        <footer class="mt-6 flex justify-between items-center">
+             <button id="schedule-btn" class="neon-button bg-gray-700 text-white font-bold py-2 px-4 rounded-lg text-md uppercase">Schedule</button>
+             <button id="settings-btn" class="neon-button bg-gray-700 text-white font-bold py-2 px-4 rounded-lg text-md uppercase">Settings</button>
+        </footer>
+
     </div>
-
-    <!-- Main Controls -->
-    <div class="flex justify-center items-center space-x-2 sm:space-x-4">
-      <button id="start-btn" class="neon-button font-bold py-3 px-6 rounded-lg text-lg">Start</button>
-      <button id="stop-btn" class="neon-button font-bold py-3 px-6 rounded-lg text-lg">Stop</button>
-      <button id="reset-btn" class="neon-button font-bold py-3 px-6 rounded-lg text-lg">Reset Round</button>
-    </div>
-
-    <!-- Round Navigation Controls -->
-    <div class="flex justify-center items-center space-x-2 sm:space-x-4 mt-4 mb-8">
-      <button id="prev-round-btn" class="neon-button font-bold py-2 px-5 rounded-lg text-base">Prev Round</button>
-      <button id="next-round-btn" class="neon-button font-bold py-2 px-5 rounded-lg text-base">Next Round</button>
-    </div>
-
-    <!-- Schedule Section Toggle -->
-    <button id="toggle-schedule-btn" class="text-gray-400 mb-4">Show Schedule ▼</button>
-
-    <!-- Schedule Editor (hidden by default) -->
-    <div id="schedule-editor">
-      <div class="bg-gray-800 bg-opacity-50 p-4 rounded-lg">
-        <h2 class="text-2xl font-bold mb-4">Tournament Schedule</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <select id="schedule-select" class="p-2 rounded-lg"></select>
-          <button id="load-schedule-btn" class="neon-button p-2 rounded-lg">Load Selected Schedule</button>
+    
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-800 border-2 border-[var(--neon-color)] neon-box rounded-lg p-8 w-full max-w-md">
+            <h2 class="text-3xl font-orbitron mb-6 text-center neon-text">Settings</h2>
+            <div class="space-y-4">
+                <h3 class="text-xl text-[var(--neon-color)]">Glow Color</h3>
+                <div class="flex justify-around">
+                    <button class="color-picker h-12 w-12 rounded-full border-4 border-transparent" style="background-color: #FF8C00;" data-color="#FF8C00"></button> <!-- Orange -->
+                    <button class="color-picker h-12 w-12 rounded-full border-4 border-transparent" style="background-color: #00FF00;" data-color="#00FF00"></button> <!-- Green -->
+                    <button class="color-picker h-12 w-12 rounded-full border-4 border-transparent" style="background-color: #00BFFF;" data-color="#00BFFF"></button> <!-- Blue -->
+                    <button class="color-picker h-12 w-12 rounded-full border-4 border-transparent ring-4 ring-white" style="background-color: #A020F0;" data-color="#A020F0"></button> <!-- Violet -->
+                </div>
+            </div>
+            <button id="close-settings-btn" class="mt-8 w-full neon-button bg-[var(--neon-color)] text-white font-bold py-3 px-6 rounded-lg text-lg uppercase">Close</button>
         </div>
-        <div id="schedule-list" class="pr-2">
-          <!-- Schedule rounds will be populated here -->
+    </div>
+    
+    <!-- Schedule Modal -->
+    <div id="schedule-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-800 border-2 border-[var(--neon-color)] neon-box rounded-lg p-8 w-full max-w-2xl max-h-[80vh] flex flex-col">
+            <h2 class="text-3xl font-orbitron mb-6 text-center neon-text">Rounds Schedule</h2>
+            <div id="schedule-list" class="flex-grow overflow-y-auto pr-4 space-y-2">
+                <!-- Schedule items will be dynamically inserted here -->
+            </div>
+            <div class="mt-6 flex justify-between">
+                 <button id="new-schedule-btn" class="neon-button bg-green-600 text-white font-bold py-2 px-4 rounded-lg text-md uppercase">New Schedule</button>
+                <button id="close-schedule-btn" class="neon-button bg-[var(--neon-color)] text-white font-bold py-3 px-6 rounded-lg text-lg uppercase">Close</button>
+            </div>
         </div>
-        <button id="add-round-btn" class="neon-button mt-4 py-2 px-4 rounded-lg hidden">Add Round</button>
-      </div>
     </div>
 
-    <!-- Color Section Toggle -->
-    <button id="toggle-color-btn" class="text-gray-400 mt-4">Show Colors ▼</button>
-
-    <!-- Color Editor (hidden by default) -->
-    <div id="color-editor">
-      <div id="color-controls" class="mt-4">
-        <label class="block text-sm font-medium text-gray-400 mb-3">Glow Color</label>
-        <div class="flex justify-center items-center space-x-3"></div>
-      </div>
+    <!-- Create Schedule Modal -->
+    <div id="create-schedule-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-800 border-2 border-[var(--neon-color)] neon-box rounded-lg p-8 w-full max-w-3xl max-h-[90vh] flex flex-col">
+            <h2 class="text-3xl font-orbitron mb-6 text-center neon-text">Create Custom Schedule</h2>
+            <form id="add-round-form" class="flex flex-wrap items-end gap-4 mb-4 pb-4 border-b border-gray-600">
+                <div class="flex-grow">
+                    <label for="round-duration" class="block text-sm font-bold mb-2 text-[var(--neon-color)]">Duration (Mins)</label>
+                    <input type="number" id="round-duration" value="15" min="1" class="w-full bg-gray-900 p-3 rounded-lg border border-[var(--neon-color)] focus:outline-none focus:ring-2 focus:ring-[var(--neon-color)]">
+                </div>
+                <div class="flex-grow">
+                    <label for="small-blind" class="block text-sm font-bold mb-2 text-[var(--neon-color)]">Small Blind</label>
+                    <input type="number" id="small-blind" value="25" min="0" step="25" class="w-full bg-gray-900 p-3 rounded-lg border border-[var(--neon-color)] focus:outline-none focus:ring-2 focus:ring-[var(--neon-color)]">
+                </div>
+                <div class="flex-grow">
+                    <label for="big-blind" class="block text-sm font-bold mb-2 text-[var(--neon-color)]">Big Blind</label>
+                    <input type="number" id="big-blind" value="50" min="0" step="25" class="w-full bg-gray-900 p-3 rounded-lg border border-[var(--neon-color)] focus:outline-none focus:ring-2 focus:ring-[var(--neon-color)]">
+                </div>
+                <button type="submit" class="neon-button bg-green-600 text-white font-bold py-3 px-5 rounded-lg uppercase self-end">Add Round</button>
+            </form>
+            <div id="new-schedule-list" class="flex-grow overflow-y-auto pr-4 space-y-2 mb-4 bg-gray-900/50 p-4 rounded-lg">
+                <p class="text-gray-400 text-center">Your new rounds will appear here...</p>
+            </div>
+            <div class="mt-auto pt-4 border-t border-gray-600 flex justify-between">
+                 <button id="cancel-create-schedule-btn" class="neon-button bg-gray-600 text-white font-bold py-3 px-6 rounded-lg uppercase">Cancel</button>
+                 <button id="save-schedule-btn" class="neon-button bg-[var(--neon-color)] text-white font-bold py-3 px-6 rounded-lg uppercase" disabled>Save & Use</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Hidden inputs for legacy one-off timer -->
-    <div id="setup-container" class="hidden">
-      <input type="number" id="minutes" value="15">
-      <input type="number" id="seconds" value="0">
+    <!-- End Tournament Modal -->
+    <div id="end-tournament-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-800 border-2 border-[var(--neon-color)] neon-box rounded-lg p-8 w-full max-w-md">
+            <h2 class="text-3xl font-orbitron mb-6 text-center neon-text">Tournament Results</h2>
+            <form id="results-form" class="space-y-4">
+                <input type="text" placeholder="1st Place Player" class="w-full bg-gray-900 p-3 rounded-lg border border-[var(--neon-color)] focus:outline-none focus:ring-2 focus:ring-[var(--neon-color)]">
+                <input type="text" placeholder="2nd Place Player" class="w-full bg-gray-900 p-3 rounded-lg border border-[var(--neon-color)] focus:outline-none focus:ring-2 focus:ring-[var(--neon-color)]">
+                <input type="text" placeholder="3rd Place Player" class="w-full bg-gray-900 p-3 rounded-lg border border-[var(--neon-color)] focus:outline-none focus:ring-2 focus:ring-[var(--neon-color)]">
+                <input type="number" placeholder="Number of Participants" class="w-full bg-gray-900 p-3 rounded-lg border border-[var(--neon-color)] focus:outline-none focus:ring-2 focus:ring-[var(--neon-color)]">
+                <input type="text" placeholder="Location" class="w-full bg-gray-900 p-3 rounded-lg border border-[var(--neon-color)] focus:outline-none focus:ring-2 focus:ring-[var(--neon-color)]">
+                <div class="flex justify-between gap-4 mt-6">
+                    <button type="button" id="cancel-end-tournament-btn" class="w-1/2 neon-button bg-gray-600 text-white font-bold py-3 rounded-lg uppercase">Cancel</button>
+                    <button type="submit" class="w-1/2 neon-button bg-[var(--neon-color)] text-white font-bold py-3 rounded-lg uppercase">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
-
-  <script>
-    // DOM Elements
-    const timerDisplay = document.getElementById('timer-display');
-    const timerDisplayMinutes = document.getElementById('timer-display-minutes');
-    const timerDisplaySeconds = document.getElementById('timer-display-seconds');
-    const roundDisplay = document.getElementById('round-display');
-    const blindsDisplay = document.getElementById('blinds-display');
-    const startBtn = document.getElementById('start-btn');
-    const stopBtn = document.getElementById('stop-btn');
-    const resetBtn = document.getElementById('reset-btn');
-    const prevRoundBtn = document.getElementById('prev-round-btn');
-    const nextRoundBtn = document.getElementById('next-round-btn');
-
-    const toggleScheduleBtn = document.getElementById('toggle-schedule-btn');
-    const scheduleEditor = document.getElementById('schedule-editor');
-    const scheduleSelect = document.getElementById('schedule-select');
-    const loadScheduleBtn = document.getElementById('load-schedule-btn');
-    const scheduleList = document.getElementById('schedule-list');
-    const addRoundBtn = document.getElementById('add-round-btn');
-
-    const toggleColorBtn = document.getElementById('toggle-color-btn');
-    const colorEditor = document.getElementById('color-editor');
-    const colorControlsContainer = document.getElementById('color-controls').querySelector('div');
-
-    const minutesInput = document.getElementById('minutes');
-    const secondsInput = document.getElementById('seconds');
-
-    // State
-    let totalSeconds = 0;
-    let timerInterval = null;
-    let isRunning = false;
-    let currentRoundIndex = 0;
-    let activeSchedule = [];
-
-    const synth = new Tone.Synth({oscillator: {type: 'sine'}, envelope: {attack: 0.005, decay: 0.1, sustain: 0.3, release: 1}}).toDestination();
-
-    // --- Schedules Data ---
-    const schedules = {
-      standard: [
-        {minutes: 15, blinds: "25/50"}, {minutes: 15, blinds: "50/100"},
-        {minutes: 12, blinds: "100/200"}, {minutes: 12, blinds: "150/300"},
-        {minutes: 12, blinds: "200/400"}, {minutes: 12, blinds: "300/600"},
-        {minutes: 10, blinds: "500/1000"}, {minutes: 10, blinds: "800/1600"},
-        {minutes: 10, blinds: "1000/2000"}, {minutes: 10, blinds: "1500/3000"},
-        {minutes: 8, blinds: "2000/4000"}, {minutes: 8, blinds: "3000/6000"},
-        {minutes: 8, blinds: "4000/8000"}, {minutes: 8, blinds: "6000/12000"},
-        {minutes: 5, blinds: "8000/16000"}, {minutes: 5, blinds: "10000/20000"},
-        {minutes: 5, blinds: "15000/30000"}, {minutes: 5, blinds: "20000/40000"},
-        {minutes: 5, blinds: "20000/40000"}, {minutes: 5, blinds: "20000/40000"},
-      ],
-
-      turbo: [
-        {minutes: 10, blinds: "25/50"}, {minutes: 10, blinds: "50/100"},
-        {minutes: 10, blinds: "100/200"}, {minutes: 8, blinds: "200/400"},
-        {minutes: 8, blinds: "300/600"}, {minutes: 8, blinds: "500/1000"},
-        {minutes: 5, blinds: "800/1600"}, {minutes: 5, blinds: "1000/2000"},
-        {minutes: 5, blinds: "1500/3000"}, {minutes: 5, blinds: "2000/4000"},
-        {minutes: 5, blinds: "3000/6000"}, {minutes: 5, blinds: "4000/8000"},
-        {minutes: 3, blinds: "6000/12000"}, {minutes: 3, blinds: "8000/16000"},
-        {minutes: 3, blinds: "10000/20000"}, {minutes: 3, blinds: "15000/30000"},
-        {minutes: 3, blinds: "20000/40000"}, {minutes: 3, blinds: "20000/40000"},
-        {minutes: 3, blinds: "20000/40000"}, {minutes: 3, blinds: "20000/40000"},
-      ],
-      custom: [
-        {minutes: 15, blinds: "25/50"}, {minutes: 15, blinds: "50/100"},
-      ],
-      test: [
-        {minutes: 3 / 60, blinds: "25/50"}, {minutes: 12 / 60, blinds: "50/100"}
-      ]
-    };
-
-    // --- Core Timer & Round Logic ---
-    function updateDisplay() {
-      const displayMinutes = Math.floor(totalSeconds / 60);
-      const displaySeconds = totalSeconds % 60;
-      timerDisplayMinutes.textContent = String(displayMinutes).padStart(2, '0');
-      timerDisplaySeconds.textContent = String(displaySeconds).padStart(2, '0');
-    }
-
-    function updateNavButtons() {
-      prevRoundBtn.disabled = currentRoundIndex === 0;
-      nextRoundBtn.disabled = currentRoundIndex >= activeSchedule.length - 1;
-    }
-
-    function loadRound(roundIndex) {
-      if (!activeSchedule || roundIndex < 0 || roundIndex >= activeSchedule.length) {
-        if (roundIndex >= activeSchedule.length) {
-          stopTimer();
-          roundDisplay.textContent = "Tournament Over";
-          blindsDisplay.textContent = "Congratulations!";
-          timerDisplay.innerHTML = "<div>&nbsp;</div><div>GG</div><div>&nbsp;</div>";
-        }
-        return false;
-      }
-      const roundData = activeSchedule[roundIndex];
-      minutesInput.value = roundData.minutes;
-      secondsInput.value = 0;
-      totalSeconds = roundData.minutes * 60;
-
-      roundDisplay.textContent = `Round ${roundIndex + 1}`;
-      blindsDisplay.textContent = `Blinds: ${roundData.blinds}`;
-      updateDisplay();
-      updateNavButtons();
-      return true;
-    }
-
-    function goToPrevRound() {
-      if (currentRoundIndex > 0) {
-        stopTimer();
-        currentRoundIndex--;
-        loadRound(currentRoundIndex);
-      }
-    }
-
-    function goToNextRound() {
-      if (currentRoundIndex < activeSchedule.length - 1) {
-        stopTimer();
-        currentRoundIndex++;
-        loadRound(currentRoundIndex);
-      }
-    }
-
-    function startTimer() {
-      if (isRunning || totalSeconds <= 0) return;
-      Tone.start();
-      isRunning = true;
-      [loadScheduleBtn, scheduleSelect, startBtn, prevRoundBtn, nextRoundBtn].forEach(el => el.disabled = true);
-
-      timerInterval = setInterval(() => {
-        totalSeconds--;
-        updateDisplay();
-        if (totalSeconds <= 0) {
-          playBeepsAndAdvance();
-        }
-      }, 1000);
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-      isRunning = false;
-      [loadScheduleBtn, scheduleSelect, startBtn].forEach(el => el.disabled = false);
-      updateNavButtons(); // Re-enable nav buttons if applicable
-    }
-
-    function resetTimer() {
-      stopTimer();
-      loadRound(currentRoundIndex);
-    }
-
-    function playBeepsAndAdvance() {
-      clearInterval(timerInterval);
-      isRunning = false;
-      const now = Tone.now();
-      // synth.triggerAttackRelease('C5', '8n', now);
-      // synth.triggerAttackRelease('C5', '8n', now + 0.3);
-      // synth.triggerAttackRelease('C5', '8n', now + 0.6);
-      // synth.triggerAttackRelease('G5', '4n', now + 0.9);
-
-      // synth.triggerAttackRelease('C5', '4n', now);
-      // synth.triggerAttackRelease('C5', '8n', now + 0.5);
-      // synth.triggerAttackRelease('C5', '8n', now + 1.0);
-      // synth.triggerAttackRelease('G5', '2n', now + 1.5);
-
-      // synth.triggerAttackRelease('C5', '1n', now);
-      // synth.triggerAttackRelease('C6', '4n', now + 0.5);
-      // synth.triggerAttackRelease('C5', '8n', now + 1.0);
-      // synth.triggerAttackRelease('F5', '2n', now + 1.5);
-
-      // synth.triggerAttackRelease('C5', 1, now);
-      // synth.triggerAttackRelease('C5', 1, now + 1.2);
-      // synth.triggerAttackRelease('C5', 1, now + 2.2);
-      // synth.triggerAttackRelease('C5', 1, now + 3.2);
-      // synth.triggerAttackRelease('C5', 1, now + 4.2);
 
 
-      // synth.triggerAttackRelease('C5', '8n', now);
-      // synth.triggerAttackRelease('C5', '8n', now + 0.5);
-      // synth.triggerAttackRelease('C5', '8n', now + 1.0);
-      // synth.triggerAttackRelease('C5', '8n', now + 1.5);
-      // synth.triggerAttackRelease('C6', '1n', now + 2.0);
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- STATE MANAGEMENT ---
+            let currentSchedule = [];
+            let newScheduleBuilder = []; // For the custom schedule modal
+            let currentRoundIndex = 0;
+            let timerInterval = null;
+            let timeLeft = 0;
+            let isPaused = true;
+            let audioCtx;
+            let oneMinuteWarningSoundPlayed = false;
 
-      synth.triggerAttackRelease('C5', 0.25, now);
-      synth.triggerAttackRelease('C5', 0.25, now + 0.5);
-      synth.triggerAttackRelease('C5', 0.25, now + 1.0);
-      synth.triggerAttackRelease('C5', 0.25, now + 1.5);
-      synth.triggerAttackRelease('G5', 2.0, now + 2.0);
+            // --- UI ELEMENTS ---
+            const timerContainer = document.getElementById('timer');
+            const timerDisplayMinutes = document.getElementById('display-minutes');
+            const timerDisplaySeconds = document.getElementById('display-seconds');
+            const currentBlindsDisplay = document.getElementById('current-blinds');
+            const nextBlindsDisplay = document.getElementById('next-blinds');
+            const roundInfoDisplay = document.getElementById('round-info');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const nextRoundBtn = document.getElementById('next-round-btn');
+            const prevRoundBtn = document.getElementById('prev-round-btn');
+            const resetRoundBtn = document.getElementById('reset-round-btn');
+            const endTournamentBtn = document.getElementById('end-tournament-btn');
+            const scheduleBtn = document.getElementById('schedule-btn');
+            const settingsBtn = document.getElementById('settings-btn');
+            const colorPickers = document.querySelectorAll('.color-picker');
+            
+            // Modals
+            const settingsModal = document.getElementById('settings-modal');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
+            const scheduleModal = document.getElementById('schedule-modal');
+            const closeScheduleBtn = document.getElementById('close-schedule-btn');
+            const newScheduleBtn = document.getElementById('new-schedule-btn');
+            const createScheduleModal = document.getElementById('create-schedule-modal');
+            const addRoundForm = document.getElementById('add-round-form');
+            const cancelCreateScheduleBtn = document.getElementById('cancel-create-schedule-btn');
+            const saveScheduleBtn = document.getElementById('save-schedule-btn');
+            const endTournamentModal = document.getElementById('end-tournament-modal');
+            const cancelEndTournamentBtn = document.getElementById('cancel-end-tournament-btn');
+            const resultsForm = document.getElementById('results-form');
 
-      // synth.triggerAttackRelease('G6', 0.25, now + 1.5);
-      // synth.triggerAttackRelease('C6', 0.25, now + 1.75);
-      // synth.triggerAttackRelease('G6', 0.25, now + 2.0);
-      // synth.triggerAttackRelease('C6', 0.25, now + 2.25);
-      // synth.triggerAttackRelease('G6', 0.25, now + 2.5);
-      // synth.triggerAttackRelease('C6', 0.25, now + 2.75);
-      // synth.triggerAttackRelease('G6', 0.25, now + 3.0);
-      // synth.triggerAttackRelease('C6', 0.25, now + 3.25);
-      // synth.triggerAttackRelease('G6', 0.25, now + 3.5);
-      // synth.triggerAttackRelease('C6', 0.25, now + 3.75);
+            // --- DEFAULT SCHEDULE (Hard-coded) ---
+            const defaultSchedule = [
+                { round: 1, smallBlind: 25, bigBlind: 50, duration: 900 },
+                { round: 2, smallBlind: 50, bigBlind: 100, duration: 900 },
+                { round: 3, smallBlind: 100, bigBlind: 200, duration: 900 },
+                { round: 4, smallBlind: 200, bigBlind: 400, duration: 720 },
+                { round: 5, smallBlind: 300, bigBlind: 600, duration: 720 },
+                { round: 6, smallBlind: 400, bigBlind: 800, duration: 720 },
+                { round: 7, smallBlind: 500, bigBlind: 1000, duration: 600 },
+                { round: 8, smallBlind: 600, bigBlind: 1200, duration: 600 },
+                { round: 9, smallBlind: 800, bigBlind: 1600, duration: 600 },
+                { round: 10, smallBlind: 1000, bigBlind: 2000, duration: 480 },
+                { round: 11, smallBlind: 1500, bigBlind: 3000, duration: 480 },
+                { round: 12, smallBlind: 2000, bigBlind: 4000, duration: 360 },
+                { round: 13, smallBlind: 5000, bigBlind: 10000, duration: 360 },
+                { round: 14, smallBlind: 10000, bigBlind: 20000, duration: 360 },
+                { round: 15, smallBlind: 15000, bigBlind: 30000, duration: 360 }
+            ];
 
-      // synth.triggerAttackRelease('G5', 0.25, now);
-      // synth.triggerAttackRelease('C5', 0.5, now + 0.25);
-      // synth.triggerAttackRelease('G5', 0.25, now + 1.25);
-      // synth.triggerAttackRelease('C5', 0.5, now + 1.5);
-      // synth.triggerAttackRelease('G5', 0.25, now + 2);
-      // synth.triggerAttackRelease('C5', 0.5, now + 2.25);
-      // synth.triggerAttackRelease('G5', 0.25, now + 3.25);
-      // synth.triggerAttackRelease('C5', 0.5, now + 3.5);
-      // synth.triggerAttackRelease('G5', 0.25, now + 4);
-      // synth.triggerAttackRelease('C5', 0.5, now + 4.25);
-      // synth.triggerAttackRelease('G5', 0.25, now + 5.25);
-      // synth.triggerAttackRelease('C5', 0.5, now + 5.5);
-      // synth.triggerAttackRelease('G5', 0.25, now + 6);
-      // synth.triggerAttackRelease('C5', 0.5, now + 6.25);
-      // synth.triggerAttackRelease('G5', 0.25, now + 7.25);
-      // synth.triggerAttackRelease('C5', 0.5, now + 7.5);
+            // --- AUDIO ---
+            function initAudio() {
+                if (!audioCtx) {
+                    try {
+                        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    } catch (e) { console.error("Web Audio API is not supported."); }
+                }
+            }
+            
+            function playSound(type) {
+                if (!audioCtx) return;
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.01);
+                if (type === 'warning') { oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); }
+                else if (type === 'countdown') { oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime); oscillator.type = 'square'; }
+                else if (type === 'end') { oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); }
+                oscillator.start(audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + (type === 'countdown' ? 0.2 : 1));
+                oscillator.stop(audioCtx.currentTime + (type === 'countdown' ? 0.2 : 1));
+            }
 
-      // Iron man (ish)
-      // synth.triggerAttackRelease('C4', 0.50, now);
-      // synth.triggerAttackRelease('D#4', 0.50, now + 0.5);
-      // synth.triggerAttackRelease('D#4', 0.50, now + 1.0);
-      // synth.triggerAttackRelease('F4', 0.50, now + 1.5);
-      // synth.triggerAttackRelease('F4', 0.50, now + 2.0);
-      // synth.triggerAttackRelease('G#4', 0.25, now + 2.5);
-      // synth.triggerAttackRelease('G4', 0.25, now + 2.75);
-      // synth.triggerAttackRelease('G#4', 0.25, now + 3.0);
-      // synth.triggerAttackRelease('G4', 0.25, now + 3.25);
-      // synth.triggerAttackRelease('G#4', 0.25, now + 3.5);
-      // synth.triggerAttackRelease('G4', 0.25, now + 3.75);
-      // synth.triggerAttackRelease('F4', 0.50, now + 4.0);
-      // synth.triggerAttackRelease('D#4', 0.50, now + 4.5);
-      // synth.triggerAttackRelease('F4', 0.50, now + 5.0);
-      // synth.triggerAttackRelease('F4', 0.50, now + 5.5);
+            // --- TIMER LOGIC ---
+            function startTimer() {
+                if (isPaused) {
+                    isPaused = false;
+                    playPauseBtn.textContent = 'Pause';
+                    initAudio();
+                    timerInterval = setInterval(() => {
+                        if (timeLeft > 0) {
+                            timeLeft--;
+                            updateTimerDisplay();
+                            if (timeLeft === 60 && !oneMinuteWarningSoundPlayed) { playSound('warning'); oneMinuteWarningSoundPlayed = true; }
+                            if (timeLeft <= 5 && timeLeft > 0) { playSound('countdown'); }
+                        } else { // Time for the current round is up
+                            playSound('end');
+                            if (currentRoundIndex < currentSchedule.length - 1) {
+                                // It's not the last round, so move to the next one.
+                                currentRoundIndex++;
+                                updateUIForRound(); // This resets the timer and blinds for the new round.
+                            } else {
+                                // This was the last round. End the tournament.
+                                pauseTimer();
+                                
+                                // Update display to show tournament has ended.
+                                timerContainer.innerHTML = `<div class="col-span-3 text-6xl md:text-7xl">TOURNAMENT OVER</div>`;
 
-      setTimeout(() => {
-        currentRoundIndex++;
-        if (loadRound(currentRoundIndex)) {
-          startTimer();
-        } else {
-          // This handles the end of the tournament
-          updateNavButtons();
-        }
-      }, 2500);
-    }
+                                // Disable controls
+                                playPauseBtn.disabled = true;
+                                nextRoundBtn.disabled = true;
+                                prevRoundBtn.disabled = true;
+                                resetRoundBtn.disabled = true;
+                                playPauseBtn.textContent = 'Finished';
 
-    // --- UI Toggles ---
-    function toggleScheduleEditor() {
-      if (scheduleEditor.style.maxHeight) {
-        scheduleEditor.style.maxHeight = null;
-        toggleScheduleBtn.textContent = 'Show Schedule ▼';
-      } else {
-        scheduleEditor.style.maxHeight = scheduleEditor.scrollHeight + "px";
-        toggleScheduleBtn.textContent = 'Hide Schedule ▲';
-      }
-    }
+                                // Automatically open the results modal
+                                openModal(endTournamentModal);
+                            }
+                        }
+                    }, 1000);
+                }
+            }
 
-    function toggleColorEditor() {
-      if (colorEditor.style.maxHeight) {
-        colorEditor.style.maxHeight = null;
-        toggleColorBtn.textContent = 'Show Colors ▼';
-      } else {
-        colorEditor.style.maxHeight = colorEditor.scrollHeight + "px";
-        toggleColorBtn.textContent = 'Hide Colors ▲';
-      }
-    }
+            function pauseTimer() {
+                isPaused = true;
+                playPauseBtn.textContent = 'Resume';
+                clearInterval(timerInterval);
+            }
 
-    // --- Schedule Editor Logic ---
-    function populateScheduleSelect() {
-      scheduleSelect.innerHTML = `
-                <option value="standard">Standard (Preset)</option>
-                <option value="turbo">Turbo (Preset)</option>
-                <option value="custom">Custom</option>
-                <option value="test">Test</option>
-            `;
-    }
+            function playPauseHandler() { isPaused ? startTimer() : pauseTimer(); }
+            function moveToNextRound() {
+                if (currentRoundIndex < currentSchedule.length - 1) { currentRoundIndex++; }
+                updateUIForRound();
+            }
+            function moveToPrevRound() {
+                 if (currentRoundIndex > 0) { currentRoundIndex--; }
+                 updateUIForRound();
+            }
+            function resetCurrentRound() {
+                pauseTimer();
+                playPauseBtn.textContent = 'Start';
+                if (currentSchedule[currentRoundIndex]) {
+                    timeLeft = currentSchedule[currentRoundIndex].duration;
+                    oneMinuteWarningSoundPlayed = false;
+                    updateTimerDisplay();
+                }
+            }
 
-    function renderScheduleList(scheduleName) {
-      const schedule = schedules[scheduleName];
-      scheduleList.innerHTML = '';
-      const isCustom = scheduleName === 'custom';
-      addRoundBtn.style.display = isCustom ? 'inline-block' : 'none';
+            // --- UI UPDATES ---
+            function convertSecondsToMinutesAndSeconds(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                const minsStr = String(mins).padStart(2, '0')
+                const secsStr = String(secs).padStart(2, '0')
+                return { mins, secs, minsStr, secsStr }
+            }
 
-      schedule.forEach((round, index) => {
-        const roundEl = document.createElement('div');
-        roundEl.className = 'grid grid-cols-3 bg-gray-900 px-4 py-2 rounded';
-        roundEl.innerHTML = `
-                    <div class="font-semibold text-left">Round ${index + 1}</div>
-                    <div class="flex items-center gap-2">
-                        ${isCustom ? `<input type="number" value="${round.minutes}" class="w-16 p-1 rounded text-center custom-min" data-index="${index}"> min` : `<span>${round.minutes} min</span>`}
-                    </div>
-                     <div class="flex items-center gap-2">
-                        Blinds: ${isCustom ? `<input type="text" value="${round.blinds}" class="w-24 p-1 rounded text-center custom-blinds" data-index="${index}">` : `<span>${round.blinds}</span>`}
-                        ${isCustom ? `<button class="text-red-500 hover:text-red-400 remove-round-btn" data-index="${index}">&times;</button>` : ''}
-                    </div>
-                `;
-        scheduleList.appendChild(roundEl);
-      });
+            function formatTime(seconds) {
+                const { minsStr, secsStr } = convertSecondsToMinutesAndSeconds(seconds);
+                return `${minsStr}:${secsStr}`;
+            }
 
-      if (isCustom) {
-        document.querySelectorAll('.custom-min, .custom-blinds').forEach(input => {
-          input.addEventListener('change', updateCustomScheduleFromUI);
+            function updateTimerDisplay() {
+                const { minsStr, secsStr } = convertSecondsToMinutesAndSeconds(timeLeft);
+                timerDisplayMinutes.innerText = minsStr;
+                timerDisplaySeconds.innerText = secsStr;
+            }
+            
+            function updateUIForRound() {
+                if (!currentSchedule || !currentSchedule.length) return;
+                
+                const round = currentSchedule[currentRoundIndex];
+                if (!round) return; // Safety check
+
+                timeLeft = round.duration;
+                oneMinuteWarningSoundPlayed = false;
+
+                updateTimerDisplay();
+                currentBlindsDisplay.textContent = `${round.smallBlind} / ${round.bigBlind}`;
+                roundInfoDisplay.textContent = `${round.round} / ${currentSchedule.length}`;
+                
+                if (currentRoundIndex + 1 < currentSchedule.length) {
+                    const nextRound = currentSchedule[currentRoundIndex + 1];
+                    nextBlindsDisplay.textContent = `${nextRound.smallBlind} / ${nextRound.bigBlind}`;
+                } else {
+                     nextBlindsDisplay.textContent = '---';
+                }
+                updateScheduleList();
+            }
+            
+            function updateScheduleList() {
+                const scheduleList = document.getElementById('schedule-list');
+                scheduleList.innerHTML = '';
+                currentSchedule.forEach((round, index) => {
+                    const isActive = index === currentRoundIndex;
+                    const item = document.createElement('div');
+                    item.className = `p-3 rounded-lg flex justify-between items-center ${isActive ? 'bg-[var(--neon-color)] text-white' : 'bg-gray-700'}`;
+                    item.innerHTML = `<span class="font-bold">Round ${round.round}</span><span>${round.smallBlind} / ${round.bigBlind}</span><span>${formatTime(round.duration)}</span>`;
+                    scheduleList.appendChild(item);
+                });
+            }
+
+            // --- MODAL HANDLING ---
+            function openModal(modal) { modal.classList.remove('hidden'); }
+            function closeModal(modal) { modal.classList.add('hidden'); }
+            
+            // --- EVENT LISTENERS ---
+            playPauseBtn.addEventListener('click', playPauseHandler);
+            nextRoundBtn.addEventListener('click', moveToNextRound);
+            prevRoundBtn.addEventListener('click', moveToPrevRound);
+            resetRoundBtn.addEventListener('click', resetCurrentRound);
+            endTournamentBtn.addEventListener('click', () => openModal(endTournamentModal));
+            settingsBtn.addEventListener('click', () => openModal(settingsModal));
+            closeSettingsBtn.addEventListener('click', () => closeModal(settingsModal));
+            scheduleBtn.addEventListener('click', () => openModal(scheduleModal));
+            closeScheduleBtn.addEventListener('click', () => closeModal(scheduleModal));
+            newScheduleBtn.addEventListener('click', () => {
+                closeModal(scheduleModal);
+                openModal(createScheduleModal);
+            });
+            cancelEndTournamentBtn.addEventListener('click', (e) => { e.preventDefault(); closeModal(endTournamentModal); });
+            resultsForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                console.log("Tournament Ended. Saving results...");
+                alert("Tournament results saved! (Check console for data)");
+                closeModal(endTournamentModal);
+            });
+            colorPickers.forEach(picker => {
+                picker.addEventListener('click', () => {
+                    const newColor = picker.dataset.color;
+                    document.documentElement.style.setProperty('--neon-color', newColor);
+                    colorPickers.forEach(p => p.classList.remove('ring-4', 'ring-white'));
+                    picker.classList.add('ring-4', 'ring-white');
+                });
+            });
+
+            // --- New Schedule Modal Logic ---
+            function updateNewScheduleList() {
+                const listEl = document.getElementById('new-schedule-list');
+                listEl.innerHTML = '';
+                if (newScheduleBuilder.length === 0) {
+                    listEl.innerHTML = `<p class="text-gray-400 text-center">Your new rounds will appear here...</p>`;
+                    saveScheduleBtn.disabled = true;
+                    return;
+                }
+                saveScheduleBtn.disabled = false;
+                newScheduleBuilder.forEach(round => {
+                     const item = document.createElement('div');
+                    item.className = 'p-3 rounded-lg flex justify-between items-center bg-gray-700';
+                    item.innerHTML = `<span class="font-bold">Round ${round.round}</span><span>${round.smallBlind} / ${round.bigBlind}</span><span>${formatTime(round.duration)}</span>`;
+                    listEl.appendChild(item);
+                });
+            }
+
+            addRoundForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const duration = parseInt(document.getElementById('round-duration').value) * 60;
+                const smallBlind = parseInt(document.getElementById('small-blind').value);
+                const bigBlind = parseInt(document.getElementById('big-blind').value);
+                
+                if (isNaN(duration) || isNaN(smallBlind) || isNaN(bigBlind)) {
+                    alert('Please enter valid numbers for all fields.');
+                    return;
+                }
+                
+                newScheduleBuilder.push({
+                    round: newScheduleBuilder.length + 1,
+                    smallBlind,
+                    bigBlind,
+                    duration,
+                    isCustom: true
+                });
+
+                // Set next round's defaults
+                document.getElementById('small-blind').value = bigBlind;
+                document.getElementById('big-blind').value = bigBlind * 2;
+
+                updateNewScheduleList();
+            });
+            
+            cancelCreateScheduleBtn.addEventListener('click', () => {
+                newScheduleBuilder = [];
+                updateNewScheduleList();
+                closeModal(createScheduleModal);
+            });
+
+            saveScheduleBtn.addEventListener('click', () => {
+                if(newScheduleBuilder.length > 0) {
+                    pauseTimer();
+                    currentSchedule = [...newScheduleBuilder];
+                    currentRoundIndex = 0;
+                    updateUIForRound();
+                    resetCurrentRound();
+                    closeModal(createScheduleModal);
+                }
+            });
+
+
+            // --- INITIALIZATION ---
+            function init() {
+                currentSchedule = [...defaultSchedule];
+                updateUIForRound();
+                updateNewScheduleList();
+            }
+
+            init();
         });
-        document.querySelectorAll('.remove-round-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            schedules.custom.splice(e.target.dataset.index, 1);
-            renderScheduleList('custom');
-          });
-        });
-      }
-    }
-
-    function updateCustomScheduleFromUI() {
-      const minInputs = document.querySelectorAll('.custom-min');
-      const blindInputs = document.querySelectorAll('.custom-blinds');
-      const newCustomSchedule = [];
-      minInputs.forEach((minInput, index) => {
-        newCustomSchedule.push({
-          minutes: parseInt(minInput.value) || 10,
-          blinds: blindInputs[index].value || "0/0"
-        });
-      });
-      schedules.custom = newCustomSchedule;
-    }
-
-    function loadSelectedSchedule() {
-      stopTimer();
-      if (scheduleSelect.value === 'custom') {
-        updateCustomScheduleFromUI();
-      }
-      activeSchedule = JSON.parse(JSON.stringify(schedules[scheduleSelect.value]));
-      currentRoundIndex = 0;
-      loadRound(currentRoundIndex);
-    }
-
-    function addNewCustomRound() {
-      schedules.custom.push({minutes: 10, blinds: "100/200"});
-      renderScheduleList('custom');
-    }
-
-    // --- Color Control ---
-    const colors = {
-      violet: '#8b5cf6', blue: '#3b82f6', green: '#22c55e',
-      yellow: '#facc15', orange: '#f97316', red: '#ef4444',
-    };
-
-    function changeColor(colorValue) {
-      document.documentElement.style.setProperty('--glow-color', colorValue);
-      colorControlsContainer.querySelectorAll('.color-swatch').forEach(swatch => {
-        swatch.classList.toggle('active', swatch.dataset.color === colorValue);
-        swatch.style.boxShadow = swatch.classList.contains('active') ? `0 0 10px ${colorValue}` : 'none';
-      });
-    }
-
-    function createColorSwatches() {
-      Object.entries(colors).forEach(([name, hex]) => {
-        const swatch = document.createElement('button');
-        swatch.className = 'color-swatch';
-        swatch.style.backgroundColor = hex;
-        swatch.style.color = hex;
-        swatch.dataset.color = hex;
-        swatch.setAttribute('aria-label', `Set color to ${name}`);
-        swatch.addEventListener('click', () => changeColor(hex));
-        colorControlsContainer.appendChild(swatch);
-      });
-    }
-
-    // --- Initialization ---
-    window.onload = () => {
-      // Main Controls
-      startBtn.addEventListener('click', startTimer);
-      stopBtn.addEventListener('click', stopTimer);
-      resetBtn.addEventListener('click', resetTimer);
-      prevRoundBtn.addEventListener('click', goToPrevRound);
-      nextRoundBtn.addEventListener('click', goToNextRound);
-
-      // Schedule Controls
-      populateScheduleSelect();
-      scheduleSelect.addEventListener('change', (e) => renderScheduleList(e.target.value));
-      loadScheduleBtn.addEventListener('click', loadSelectedSchedule);
-      toggleScheduleBtn.addEventListener('click', toggleScheduleEditor);
-      addRoundBtn.addEventListener('click', addNewCustomRound);
-
-      // Color Controls
-      toggleColorBtn.addEventListener('click', toggleColorEditor);
-      createColorSwatches();
-      changeColor(colors.blue);
-
-      // Initial load
-      loadSelectedSchedule();
-      renderScheduleList(scheduleSelect.value);
-    };
-  </script>
+    </script>
 </body>
 </html>
+
